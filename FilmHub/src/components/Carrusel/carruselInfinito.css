@@ -1,0 +1,33 @@
+.carrusel-container {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.carrusel {
+    display: flex;
+    gap: 10px;
+    width: max-content;
+    animation: scroll 10s linear infinite;
+}
+
+.carrusel-img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}

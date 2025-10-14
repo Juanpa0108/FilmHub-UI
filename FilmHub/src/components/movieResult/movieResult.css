@@ -1,0 +1,86 @@
+.movie-result{
+    display: flex; /* Flexbox para alinear imagen y contenido lado a lado */
+    padding: 20px;
+    border-bottom: 2px solid #eee; /* Línea separadora */
+    align-items: flex-start; 
+    transition: all 0.5s ease; /* ← AQUÍ para animaciones suaves */
+    cursor: pointer; /* ← AQUÍ para mostrar que es clickeable */
+}
+
+.movie-result:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* ← AQUÍ color al pasar mouse */
+    transform: translateX(2px); /* ← AQUÍ movimiento al hover */
+}
+/* Elimina la línea del último elemento */
+.movie-result:last-child {
+    border-bottom: none;
+}
+
+/* Contenedor de la imagen */
+.movie-poster {
+    flex-shrink: 0; /* No se encoge */
+    margin-right: 20px; /* Espacio entre imagen y contenido */
+}
+
+/* Imagen de la película */
+.movie-poster img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover; /* Mantiene proporciones sin deformar */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Contenido de texto */
+.movie-result-content {
+    flex: 1; /* Toma todo el espacio restante */
+}
+
+/* Título de la película */
+.movie-result-title {  
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Año y actores */
+.movie-result-info {   
+    margin: 0 0 12px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Calificación con estrellas */
+.movie-result-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre elementos */
+}
+
+.result-stars {
+    color: #ffd700; /* Color dorado */
+    font-size: 18px;
+}
+
+.movie-result-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.movie-result:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+.movie-result {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}

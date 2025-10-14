@@ -1,0 +1,101 @@
+body {
+    background-color: #0056b3;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #003f7f;
+}
+
+.recovery-container {
+    width: 100%;
+    max-width: 380px;
+    margin: 50px auto;
+    padding: 25px;
+    text-align: center;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.recovery-container:hover {
+    transform: translateY(-3px);
+}
+
+h2 {
+    margin-bottom: 10px;
+    color: #222;
+}
+
+p {
+    font-size: 14px;
+    color: #555;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.icon {
+    color: #888;
+    margin-right: 8px;
+}
+
+input {
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 16px;
+}
+
+button {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.message {
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.error {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

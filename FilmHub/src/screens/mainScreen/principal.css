@@ -1,0 +1,299 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Arial", sans-serif;
+    background: var(--bg);
+    
+}
+
+/* Contenedor principal */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+    padding-top: 60px; /* Espacio para el navbar fixed */
+}
+
+/* Navbar (se mantiene igual) */
+.navbar {
+    position: fixed;
+    margin-top: 0px;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    background: rgba(18, 18, 24, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+/* Logo y marca (se mantiene igual) */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo {
+    width: 35px;
+    height: auto;
+}
+
+.brand-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--text);
+}
+
+.brand-subtext {
+    font-weight: normal;
+    font-size: 16px;
+}
+
+/* Header (se mantiene igual) */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.Searchbar {
+    grid-template-columns: 75% 25%;
+    align-items: center;
+    flex-direction: row; 
+    
+}
+
+.Searchbar-input{
+    max-height: 25px;
+    
+}
+
+/* Barra de búsqueda (se mantiene igual) */
+.search-bar {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 180px;
+}
+
+/* Menú desplegable (se mantiene igual) */
+.menu-container {
+    position: relative;
+}
+
+.menu-button {
+    background-color: #1f1f27;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-button:hover {
+    background-color: #2a2a33;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background: #1a1a22;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    padding: 6px 0;
+}
+
+.dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 12px;
+    transition: 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background: #22222b;
+}
+
+/* Botones de autenticación (se mantiene igual) */
+.auth-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.auth-buttons a {
+    padding: 6px 12px;
+    background: #2a2a33;
+    color: white;
+    text-decoration: none;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-buttons a:hover {
+    background: #34343f;
+}
+
+/* Carrusel Infinito (banner superior) */
+.carrusel-banner {
+    width: 100vw;
+    margin: 20px 0;
+}
+
+/* Contenedor del carrusel estático */
+.static-carousel-container {
+    width: 100vw;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Estilos del carrusel de películas */
+.movies-carousel {
+    width: 100%;
+    margin: 40px 0;
+    color: white;
+}
+
+.carousel-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.carousel-header h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.carousel-header p {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 15px;
+    width: calc(100% - 80px);
+    overflow: hidden;
+}
+
+.movie-card {
+    flex: 0 0 calc(25% - 15px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.movie-percent {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffcc00;
+    margin-bottom: 8px;
+}
+
+.movie-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.movie-subtitle {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.carousel-arrow {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.carousel-arrow:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.view-all {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.view-all button {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.view-all button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.movie-carousel-section {
+    position: relative;
+    padding-top: 60px;
+    width: 100vw;
+    left: 50%;
+    right: 0;
+    transform: translateX(-50%);
+    margin-top: 48px;
+    padding: 0;
+    z-index: 1;
+}
+
+.carrousel-screen .banner {
+    position: relative;
+    top: 0;
+    left: 0;
+    
+    height: calc(100vh - 60px);
+    padding-top: 60px;
+    width: 100vw;
+    min-width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.logo-link {
+  text-decoration: none;
+}
