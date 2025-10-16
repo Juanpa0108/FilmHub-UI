@@ -63,7 +63,8 @@ h2 {
     border: none;
     border-radius: 10px;
     font-size: 16px;
-    background: linear-gradient(90deg, #8e44ad, var(--brand));
+    /* Usamos el color solicitado en un degradado sutil hacia la variable --brand (ahora también #F59223) */
+    background: linear-gradient(90deg, #F59223, var(--brand));
     color: white;
     cursor: pointer;
     transition: 0.3s; /* Transición suave */

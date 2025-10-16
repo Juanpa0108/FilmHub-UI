@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../API/auth";
 import type { Movie } from "../../types/movie"; // ajusta el path si usas alias "@"
 import "./movieResult.css";
 
@@ -7,11 +8,23 @@ type MovieResultProps = {
 };
 
 export default function MovieResult({ movie }: MovieResultProps) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   if (!movie) return null;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      navigate(`/movie/${movie.id}`);
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
-    <Link to={`/movie/${movie.id}`} className="movie-result-link">
-      <li className="movie-result" role="listitem">
+    <li className="movie-result" role="listitem">
+      <button className="movie-result-btn" onClick={handleClick} aria-label={`Open ${movie.title}`}>
         <div className="movie-poster">
           <img
             src={movie.thumbnailImage ?? "/placeholder-image.jpg"}
@@ -31,7 +44,7 @@ export default function MovieResult({ movie }: MovieResultProps) {
             <span className="result-stars">★★★★★</span>
           </div>
         </div>
-      </li>
-    </Link>
+      </button>
+    </li>
   );
 }
