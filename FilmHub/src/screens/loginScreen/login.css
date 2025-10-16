@@ -63,7 +63,8 @@ h2 {
     border: none;
     border-radius: 10px;
     font-size: 16px;
-    background: linear-gradient(90deg, #8e44ad, var(--brand));
+    /* Usamos el color solicitado en un degradado sutil hacia la variable --brand (ahora también #F59223) */
+    background: linear-gradient(90deg, #F59223, var(--brand));
     color: white;
     cursor: pointer;
     transition: 0.3s; /* Transición suave */
@@ -152,7 +153,7 @@ h2 {
 }
 
 #recovery-link a:hover {
-    color: #ff5277;
+    color: #000000;
 }
 
 /* Estilo del enlace de registro cuando el usuario pasa el mouse */

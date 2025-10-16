@@ -2,7 +2,7 @@
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: #1f1f27;
+  background-color: #0c0c0b;
   border-radius: 9999px;
   padding: 4px 4px 4px 12px;
   height: 36px;
@@ -35,7 +35,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #1a1a22;
+  background: #0c0c0b;
   list-style: none;
   padding: 0;
   margin: 4px 0 0;
@@ -52,5 +52,5 @@
 }
 
 .suggestionItem:hover {
-  background: #22222b;
+  background: #0c0c0b;
 }

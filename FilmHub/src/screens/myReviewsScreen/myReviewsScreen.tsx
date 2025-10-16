@@ -35,7 +35,9 @@ const MyReviewsScreen: React.FC = () => {
     <div className="app-container">
       <div className="navbar">
         <div className="brand">
-          <BrandLogo className="logo" />
+          <Link to="/">
+            <BrandLogo className="logo" />
+          </Link>
           <span className="brand-text">
             Film <span className="brand-subtext">Hub</span>
           </span>

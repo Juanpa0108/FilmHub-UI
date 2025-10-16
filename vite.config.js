@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react()],
   root: 'FilmHub',
   publicDir: 'public',
+  // Ensure Vite loads .env from the workspace root (where package.json lives)
+  envDir: '..',
   server: {
     port: 5174, // match the port you were using; Vite will auto-pick if busy
     open: false,

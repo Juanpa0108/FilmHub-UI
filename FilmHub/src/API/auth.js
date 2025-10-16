@@ -1,6 +1,7 @@
 import { useReducer, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { apiPath } from "../config/env";
 
 const initialState = {
   user: null,
@@ -67,10 +68,17 @@ const useAuth = () => {
   }, []);
   const register = async (userInfo) => {
     try {
-      const response = await fetch("http://18.230.67.228:31479/api/users/register/", {
+      const payload = {
+        firstName: userInfo.firstName || userInfo.username,
+        lastName: userInfo.lastName,
+        age: userInfo.age,
+        email: userInfo.email,
+        password: userInfo.password,
+      };
+      const response = await fetch(apiPath("/api/users/register/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userInfo),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -93,7 +101,7 @@ const useAuth = () => {
 
   const login = async (userInfo) => {
     try {
-      const response = await fetch(`http://18.230.67.228:31479/api/users/login/`, {
+      const response = await fetch(apiPath(`/api/auth/login`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "cors",
@@ -106,18 +114,26 @@ const useAuth = () => {
       }
 
       const data = await response.json();
-      if (data.access && data.refresh && data.user) {
+      // Support either {access, refresh, user} or {token, user}
+      const accessToken = data.access || data.token;
+      const refreshTokenValue = data.refresh; // may be undefined on this API
+      const apiUser = data.user || {};
+      if (accessToken && apiUser) {
         const user = {
-          id: data.user.id,
-          email: data.user.email,
-          username: data.user.username,
+          id: apiUser.id,
+          email: apiUser.email,
+          username: apiUser.username || apiUser.firstName || "",
+          firstName: apiUser.firstName,
+          lastName: apiUser.lastName,
           expirationDate: setExpirationDate(2700),
         };
 
-        dispatch({ type: actions.SET_USER, user, accessToken: data.access });
+        dispatch({ type: actions.SET_USER, user, accessToken });
         localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("accessToken", data.access);
-        localStorage.setItem("refreshToken", data.refresh);
+        localStorage.setItem("accessToken", accessToken);
+        if (refreshTokenValue) {
+          localStorage.setItem("refreshToken", refreshTokenValue);
+        }
 
         Swal.fire({
           position: "top-end",
@@ -215,7 +231,7 @@ const checkTokenExpiration = async () => {
       if (!refreshToken) {
         return logout();
       }
-      const response = await fetch("http://18.230.67.228:31479/api/users/refresh/", {
+      const response = await fetch(apiPath("/api/users/refresh/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh: refreshToken }),
