@@ -2,18 +2,18 @@
     max-width: 100%;
     max-height: 100%;
     margin: 15px 55px 15px 55px;
-    background-color: rgba(255, 255, 255, 0.3); /* ← AQUÍ la transparencia */
-    backdrop-filter: blur(50px); /* ← AQUÍ el efecto cristal */
+    background-color: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(30px);
     border-radius: 16px; /* ← AQUÍ bordes redondeados */
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     overflow: hidden;
 }
 
 /* Encabezado */
 .results-header {
-    background-color: rgba(220, 16, 53, 0.8);
+    background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
-    color: white;
+    color: var(--text);
     padding: 20px;
     text-align: center;
 }

@@ -1,14 +1,14 @@
 .movie-result{
     display: flex; /* Flexbox para alinear imagen y contenido lado a lado */
     padding: 20px;
-    border-bottom: 2px solid #eee; /* Línea separadora */
+    border-bottom: 1px solid rgba(255,255,255,0.08); /* Línea separadora suave */
     align-items: flex-start; 
     transition: all 0.5s ease; /* ← AQUÍ para animaciones suaves */
     cursor: pointer; /* ← AQUÍ para mostrar que es clickeable */
 }
 
 .movie-result:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* ← AQUÍ color al pasar mouse */
+    background-color: rgba(255, 255, 255, 0.08); /* hover sutil oscuro */
     transform: translateX(2px); /* ← AQUÍ movimiento al hover */
 }
 /* Elimina la línea del último elemento */
@@ -41,13 +41,13 @@
     margin: 0 0 8px 0;
     font-size: 20px;
     font-weight: bold;
-    color: #333;
+    color: var(--text);
 }
 
 /* Año y actores */
 .movie-result-info {   
     margin: 0 0 12px 0;
-    color: #666;
+    color: var(--muted);
     font-size: 14px;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .movie-result:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.08);
   cursor: pointer;
   transform: scale(1.02);
   transition: transform 0.2s ease;

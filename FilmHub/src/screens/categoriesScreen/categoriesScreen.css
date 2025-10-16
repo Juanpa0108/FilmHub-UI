@@ -24,18 +24,18 @@
 }
 
 .category-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   transition: transform 0.3s;
   cursor: pointer;
 }
 
 .category-card:hover {
   transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .category-emoji {

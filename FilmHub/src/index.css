@@ -1,6 +1,6 @@
 :root {
-  --bg: #000000;        /* fondo principal más negro */
-  --panel: #0c0c12;     /* paneles oscuros */
+  --bg: #0c0c0b;        /* fondo negro exacto del logo */
+  --panel: #0c0c0b;     /* unificamos paneles al mismo negro */
   --text: #e8e8ea;      /* texto claro */
   --muted: #a6a6b0;     /* texto secundario */
   --brand: #b659cd;     /* acento del logo */
@@ -24,7 +24,7 @@ a { color: inherit; text-decoration: none; }
 button {
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.08);
-  background: #12121a;
+  background: var(--bg);
   color: var(--text);
   padding: 0.6em 1.2em;
   cursor: pointer;

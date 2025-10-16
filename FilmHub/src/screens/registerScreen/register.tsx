@@ -8,6 +8,8 @@ import BrandLogo from "../../components/BrandLogo/BrandLogo"; // ✅ agrega esta
 
 type FormData = {
   username: string;
+  lastName: string;
+  age: string; // keep as string for input, convert on submit
   email: string;
   password: string;
   confirmPassword: string;
@@ -15,12 +17,14 @@ type FormData = {
 
 const Register: React.FC = () => {
   const { register: registrarUsuario } = useAuth() as {
-    register: (data: { email: string; username: string; password: string }) => Promise<void>;
+    register: (data: { email: string; username: string; password: string; lastName?: string; age?: number }) => Promise<void>;
   };
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
     username: "",
+    lastName: "",
+    age: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -34,10 +38,14 @@ const Register: React.FC = () => {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const { username, email, password, confirmPassword } = formData;
+  const { username, lastName, age, email, password, confirmPassword } = formData;
 
     if (!username || !email || !password || !confirmPassword) {
       alert("Please fill in all fields.");
+      return;
+    }
+    if (age && (Number.isNaN(Number(age)) || Number(age) < 0)) {
+      alert("Please enter a valid age.");
       return;
     }
     if (password !== confirmPassword) {
@@ -47,7 +55,7 @@ const Register: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await registrarUsuario({ email, username, password });
+  await registrarUsuario({ email, username, password, lastName, age: age ? Number(age) : undefined });
       navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);
@@ -80,6 +88,21 @@ const Register: React.FC = () => {
             value={formData.username}
             onChange={handleChange}
             required
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            min={0}
+            value={formData.age}
+            onChange={handleChange}
           />
           <input
             type="email"

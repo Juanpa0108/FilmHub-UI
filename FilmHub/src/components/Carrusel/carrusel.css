@@ -36,7 +36,7 @@
   /* Tarjetas de películas */
   .movie-card {
     flex: 0 0 calc(25% - 1rem);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(8px);
     border-radius: 0.5rem;
     padding: 1.25rem;
@@ -78,7 +78,7 @@
   }
   
   .carousel-button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
     transform: scale(1.05);
   }
   

@@ -63,7 +63,7 @@ export default function AnimatedBackground() {
 
     let rafId = 0;
     const animate = (cv: HTMLCanvasElement, cx: CanvasRenderingContext2D) => {
-      cx.fillStyle = "#78288C";
+  cx.fillStyle = "#0c0c0b";
       cx.fillRect(0, 0, cv.width, cv.height);
       particles.forEach((p) => {
         p.update();
