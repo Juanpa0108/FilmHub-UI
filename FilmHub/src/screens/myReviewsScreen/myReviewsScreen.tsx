@@ -1,21 +1,41 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import useAuth from "../../API/auth";
 import Searchbar from "../../components/SearchBar/Searchbar";
-import LogoutButton from "../../components/LogoutButton/logoutButton";
+import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import "../../screens/carrouselScreen/carrouselScreen.css";
+import "./myReviewsScreen.css";
 
-const PremieresScreen = () => {
+const MyReviewsScreen: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { user } = useAuth();
 
+  const reviews = [
+    {
+      id: 1,
+      movieTitle: "Minecraft: The Movie",
+      image: "/images/minecraft.jpg",
+      rating: 4,
+      author: "Juan",
+      comment:
+        "Very fun and colorful! Perfect for kids and fans of the game. Jason Momoa was hilarious!",
+    },
+    {
+      id: 2,
+      movieTitle: "Oppenheimer",
+      image: "/images/oppenheimer.jpg",
+      rating: 5,
+      author: "Juan",
+      comment: "A masterpiece! Deep, thought-provoking, and powerful.",
+    },
+  ];
+
   return (
     <div className="app-container">
-      {/* Navbar */}
       <div className="navbar">
         <div className="brand">
-          <img src={logo} alt="Logo" className="logo" />
+          <BrandLogo className="logo" />
           <span className="brand-text">
             Film <span className="brand-subtext">Hub</span>
           </span>
@@ -23,7 +43,6 @@ const PremieresScreen = () => {
 
         <div className="header">
           <Searchbar />
-
           <div className="menu-container">
             <button
               className="menu-button"
@@ -54,15 +73,26 @@ const PremieresScreen = () => {
         </div>
       </div>
 
-      {/* Contenido principal */}
-      <div className="movie-carousel-section">
-        <h1 style={{ color: "white", textAlign: "center" }}>Categories</h1>
-        <p style={{ color: "white", textAlign: "center", opacity: 0.8 }}>
-          Aquí puedes explorar por géneros como acción, comedia, drama, y más.
-        </p>
+      <div className="reviews-section">
+        <h2>My Movie Reviews</h2>
+        <p>These are your latest movie ratings and comments.</p>
+
+        <div className="reviews-grid">
+          {reviews.map((review) => (
+            <div key={review.id} className="review-card">
+              <img src={review.image} alt={review.movieTitle} />
+              <div className="review-content">
+                <h3>{review.movieTitle}</h3>
+                <p className="rating">⭐ {review.rating}/5</p>
+                <p className="comment">"{review.comment}"</p>
+                <p className="author">- {review.author}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default PremieresScreen;
+export default MyReviewsScreen;

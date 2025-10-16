@@ -1,41 +1,48 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.png";
-import CarruselInfinito from "../../components/Carrusel/carruselInfinito.jsx";
-import Carrusel from "../../components/Carrusel/carrusel.jsx";
-import useAuth from "../../API/auth";
 import { Link } from "react-router-dom";
-import LogoutButton from "../../components/LogoutButton/logoutButton.jsx";
-import Searchbar from "../../components/SearchBar/Searchbar.jsx";
-import CarrouselScreen from "../carrouselScreen/carrouselScreen.jsx";
-import ResultsScreen from "../resultsScreen/resultsScreen.jsx";
+import useAuth from "../../API/auth";
+
+// Componentes
+import CarruselInfinito from "../../components/Carrusel/carruselInfinito";
+import Carrusel from "../../components/Carrusel/carrusel";
+import Searchbar from "../../components/SearchBar/Searchbar";
+import CarrouselScreen from "../carrouselScreen/carrouselScreen";
+import ResultsScreen from "../resultsScreen/resultsScreen";
+import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import BrandLogo from "../../components/BrandLogo/BrandLogo"; // ✅ nuevo logo
+
+// Datos y estilos
 import { moviesData } from "../carrouselScreen/movieData";
 import "./principal.css";
 
-const Principal = () => {
+const Principal: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { user } = useAuth();
 
-  const peliculasFiltradas = (moviesData || []).filter((peli) =>
-    peli.title.toLowerCase().includes(busqueda.toLowerCase()) ||
-    peli.genre.toLowerCase().includes(busqueda.toLowerCase()) ||
-    peli.year.includes(busqueda)
+  const peliculasFiltradas = (moviesData || []).filter(
+    (peli) =>
+      peli.title.toLowerCase().includes(busqueda.toLowerCase()) ||
+      peli.genre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      peli.year.includes(busqueda)
   );
-  const titulos = moviesData.map(p => p.title);
+
+  const titulos = moviesData.map((p) => p.title);
 
   const images = [
     "/images/img1.jpg",
     "/images/img2.jpg",
     "/images/img3.jpg",
-    "/images/img4.jpg"
+    "/images/img4.jpg",
   ];
 
   return (
     <div className="app-container">
+      {/* NAVBAR */}
       <div className="navbar">
         <div className="brand">
           <Link to="/" className="logo-link">
-            <img src={logo} alt="Logo" className="logo" />
+            <BrandLogo className="logo" /> {/* ✅ reemplaza <img> */}
           </Link>
           <span className="brand-text">
             Film <span className="brand-subtext">Hub</span>
@@ -75,6 +82,7 @@ const Principal = () => {
         </div>
       </div>
 
+      {/* CONTENIDO PRINCIPAL */}
       <div className="movie-carousel-section">
         <CarrouselScreen />
       </div>
@@ -87,8 +95,8 @@ const Principal = () => {
         <Carrusel />
       </div>
 
-      {/* Resultados búsqueda */}
-      {busqueda && (
+      {/* RESULTADOS DE BÚSQUEDA */}
+      {busqueda ? (
         <div className="search-results">
           {peliculasFiltradas.length > 0 ? (
             <div className="results-banner">
@@ -101,10 +109,7 @@ const Principal = () => {
             <p>No results found.</p>
           )}
         </div>
-      )}
-
-      {/* Mostrar todas si no hay búsqueda */}
-      {!busqueda && (
+      ) : (
         <div className="results-banner">
           <ResultsScreen />
         </div>

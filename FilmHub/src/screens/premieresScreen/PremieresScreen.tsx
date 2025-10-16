@@ -1,40 +1,23 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import useAuth from "../../API/auth";
 import Searchbar from "../../components/SearchBar/Searchbar";
-import LogoutButton from "../../components/LogoutButton/logoutButton";
+import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import "../../screens/carrouselScreen/carrouselScreen.css";
-import "./categoriesScreen.css";
 
-const CategoriesScreen = () => {
+const PremieresScreen: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { user } = useAuth();
 
-  const categories = [
-    { name: "Action", emoji: "🔥" },
-    { name: "Comedy", emoji: "😂" },
-    { name: "Drama", emoji: "🎭" },
-    { name: "Horror", emoji: "👻" },
-    { name: "Sci-Fi", emoji: "🚀" },
-    { name: "Romance", emoji: "❤️" },
-    { name: "Thriller", emoji: "🔪" },
-    { name: "Animation", emoji: "🎬" },
-  ];
-
   return (
     <div className="app-container">
-      {/* Navbar */}
       <div className="navbar">
         <div className="brand">
-          <Link to="/" className="logo-link">
-            <img src={logo} alt="Logo" className="logo" />
-          </Link>
-          <Link to="/" className="brand-text-link">
-            <span className="brand-text">
-              Film <span className="brand-subtext">Hub</span>
-            </span>
-          </Link>
+          <BrandLogo className="logo" />
+          <span className="brand-text">
+            Film <span className="brand-subtext">Hub</span>
+          </span>
         </div>
 
         <div className="header">
@@ -70,21 +53,14 @@ const CategoriesScreen = () => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="categories-section">
-        <h2>Movie Categories</h2>
-        <p>Select a genre and discover awesome films!</p>
-        <div className="categories-grid">
-          {categories.map((cat, index) => (
-            <div key={index} className="category-card">
-              <span className="category-emoji">{cat.emoji}</span>
-              <span className="category-name">{cat.name}</span>
-            </div>
-          ))}
-        </div>
+      <div className="movie-carousel-section">
+        <h1 style={{ color: "white", textAlign: "center" }}>Categories</h1>
+        <p style={{ color: "white", textAlign: "center", opacity: 0.8 }}>
+          Aquí puedes explorar por géneros como acción, comedia, drama, y más.
+        </p>
       </div>
     </div>
   );
 };
 
-export default CategoriesScreen;
+export default PremieresScreen;
