@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {},
+    "types": ["vite/client"]
+  },
+  "include": [
+    "src",
+    "src/types",  
+    "vite.config.*",
+    "vitest.config.*",
+    "eslint.config.*"
+  ]
+}

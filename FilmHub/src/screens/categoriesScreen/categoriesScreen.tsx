@@ -1,49 +1,57 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { moviesData } from "../carrouselScreen/movieData";
-import logo from "../../assets/logo.png";
-import "./movieDetail.css";
+import { Movie } from "../../types/movie";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
+import "../movieDetail/movieDetail.css";
 
-const MovieDetail = () => {
-  const { id } = useParams();
-  const movie = moviesData.find((m) => m.id.toString() === id);
+type UserComment = { id: number; text: string; rating: number; date: string };
 
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(5);
-  const [comments, setComments] = useState([]);
+const MovieDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const movie: Movie | undefined = moviesData.find((m) => String(m.id) === id);
+
+  const [comment, setComment] = useState<string>("");
+  const [rating, setRating] = useState<number>(5);
+  const [comments, setComments] = useState<UserComment[]>([]);
 
   if (!movie) {
     return <h2 style={{ padding: "2rem" }}>🎬 Movie not found</h2>;
   }
 
+  // Asegúrate que el archivo exista en /public/movie/movie-website-landing-page-images/
   const bgUrl = `/movie/movie-website-landing-page-images/${movie.backgroundImage}`;
 
-  const handleSubmit = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (!comment.trim()) return;
 
-    const newComment = {
+    const newComment: UserComment = {
       id: Date.now(),
-      text: comment,
-      rating: Number(rating),
+      text: comment.trim(),
+      rating,
       date: new Date().toLocaleDateString(),
     };
 
-    setComments([...comments, newComment]);
+    setComments((prev) => [...prev, newComment]);
     setComment("");
     setRating(5);
   };
 
+  const handleRatingChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setRating(Number(e.currentTarget.value));
+  };
+
+  const handleCommentChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setComment(e.currentTarget.value);
+  };
+
   return (
-    <div
-      className="movie-detail-container"
-      style={{ backgroundImage: `url(${bgUrl})` }}
-    >
+    <div className="movie-detail-container" style={{ backgroundImage: `url(${bgUrl})` }}>
       <div className="movie-overlay">
-        {/* Logo and brand */}
         <div className="movie-header-logo">
           <Link to="/" className="logo-link">
-            <img src={logo} alt="Logo" className="logo" />
+            <BrandLogo className="logo" />
           </Link>
           <Link to="/" className="brand-text-link">
             <h2 className="brand-title">
@@ -53,24 +61,21 @@ const MovieDetail = () => {
         </div>
 
         <img
-          src={movie.titleImage}
-          alt={movie.alt}
+          src={movie.titleImage}                 // si viene de /public, usa ruta absoluta: "/images/..."
+          alt={movie.alt ?? movie.title}
           className="movie-title-img"
         />
         <h1>{movie.title}</h1>
 
         <div className="movie-info">
-          <p><strong>Year:</strong> {movie.year}</p>
-          <p><strong>Duration:</strong> {movie.duration}</p>
-          <p><strong>Rating:</strong> {movie.rating}</p>
-          <p><strong>Genre:</strong> {movie.genre}</p>
+          <p><strong>Year:</strong> {movie.year ?? "—"}</p>
+          <p><strong>Duration:</strong> {movie.duration ?? "—"}</p>
+          <p><strong>Rating:</strong> {movie.rating ?? "—"}</p>
+          <p><strong>Genre:</strong> {movie.genre ?? "—"}</p>
         </div>
 
-        <div className="movie-description">
-          {movie.description}
-        </div>
+        <div className="movie-description">{movie.description ?? ""}</div>
 
-        {/* Comments */}
         <div className="comments-section">
           <h2>Reviews and Comments</h2>
 
@@ -79,7 +84,7 @@ const MovieDetail = () => {
             <select
               id="rating"
               value={rating}
-              onChange={(e) => setRating(e.target.value)}
+              onChange={handleRatingChange}
               className="rating-select"
             >
               {[1, 2, 3, 4, 5].map((num) => (
@@ -91,9 +96,9 @@ const MovieDetail = () => {
 
             <textarea
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={handleCommentChange}
               placeholder="Write your comment..."
-              rows="4"
+              rows={4}
               required
             />
 
