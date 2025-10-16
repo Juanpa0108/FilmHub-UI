@@ -206,6 +206,7 @@ const Register: React.FC = () => {
           </button>
         </form>
 
+
         <div className="social-login-register">
           <p>Or sign up with</p>
           <div className="social-icons-register">
