@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+/* === BASE === */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", "Arial", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.profile-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: var(--bg);
+}
+
+.profile-container {
+    width: 92%;
+    max-width: 980px;
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 32px 36px 40px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+/* Top bar */
+.profile-topbar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+}
+
+/* === TITULOS === */
+.profile-title {
+    font-size: 34px;
+    color: var(--brand);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.profile-subtitle {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+}
+
+/* === SECCIONES === */
+.profile-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+@media (max-width: 768px) {
+    .profile-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === TARJETAS === */
+.profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 20px 20px 22px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.profile-card:hover {
+    box-shadow: 0 0 20px rgba(248, 143, 12, 0.15);
+    transform: translateY(-3px);
+}
+
+/* === CABECERA DE CADA SECCIÓN === */
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.profile-icon {
+    color: var(--brand);
+    font-size: 22px;
+}
+
+.profile-card h3 {
+    font-size: 20px;
+    color: var(--brand);
+    font-weight: 500;
+}
+
+/* === CONTENIDO === */
+.profile-card-content {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+.profile-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.profile-form label { display: flex; flex-direction: column; gap: 6px; color: var(--text); font-size: 13px; text-align: center; }
+.profile-form input { background: var(--bg); color: var(--text); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 11px 12px; text-align: center; }
+.profile-form input::placeholder { color: var(--text-muted); }
+.profile-form .btn { grid-column: 1 / -1; justify-self: center; }
+.profile-form.single { grid-template-columns: 1fr; }
+.profile-readonly { text-align: center; }
+.profile-readonly p { margin: 6px 0; }
+.profile-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: center; }
+
+.profile-card-content p {
+    margin: 6px 0;
+}
+
+.profile-card-content ul {
+    list-style: none;
+    padding-left: 15px;
+}
+
+.profile-card-content li {
+    margin-bottom: 4px;
+}
+
+/* === BOTONES === */
+.btn {
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--brand), var(--brand));
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* Back button variant */
+.btn-back {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text);
+    padding: 8px 12px;
+}
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* === EFECTOS === */
+.profile-card a {
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.profile-card a:hover {
+    filter: brightness(1.1);
+}

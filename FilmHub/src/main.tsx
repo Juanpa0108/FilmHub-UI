@@ -12,9 +12,10 @@ import CarrouselScreen from "./screens/carrouselScreen/carrouselScreen";
 import CategoriesScreen from "./screens/categoriesScreen/categoriesScreen";
 import MyReviewsScreen from "./screens/myReviewsScreen/myReviewsScreen";
 import PremieresScreen from "./screens/premieresScreen/PremieresScreen";
+import Profile from "./screens/profileScreen/profileScreen";
 
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/my-reviews" element={<MyReviewsScreen />} />
         <Route path="/premieres" element={<PremieresScreen />} />
         <Route path="/movie/:id" element={<MovieDetail />} /> 
+        <Route path="/profile" element={<Profile />} /> 
       </Routes>
     </AuthProvider>
   </BrowserRouter>

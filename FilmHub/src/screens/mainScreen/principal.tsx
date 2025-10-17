@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../API/auth";
+import { useAuthContext } from "../../API/authContext";
 
 // Componentes
 import CarruselInfinito from "../../components/Carrusel/carruselInfinito";
@@ -9,6 +9,7 @@ import Searchbar from "../../components/SearchBar/Searchbar";
 import CarrouselScreen from "../carrouselScreen/carrouselScreen";
 import ResultsScreen from "../resultsScreen/resultsScreen";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import { FaUserCircle } from "react-icons/fa";
 import BrandLogo from "../../components/BrandLogo/BrandLogo"; // ✅ nuevo logo
 
 // Datos y estilos
@@ -18,7 +19,30 @@ import "./principal.css";
 const Principal: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const { user } = useAuth();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Cerrar el menú de usuario con clic fuera o con tecla ESC
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (!userMenuOpen) return;
+      const target = e.target as Node | null;
+      if (userMenuRef.current && target && !userMenuRef.current.contains(target)) {
+        setUserMenuOpen(false);
+      }
+    }
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") setUserMenuOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [userMenuOpen]);
+  const { state } = useAuthContext();
+  const user = state?.user;
 
   const peliculasFiltradas = (moviesData || []).filter(
     (peli) =>
@@ -76,7 +100,28 @@ const Principal: React.FC = () => {
                 <Link to="/login">Login</Link>
               </>
             ) : (
-              <LogoutButton />
+              <div className="user-menu" ref={userMenuRef}>
+                <button
+                  className="user-avatar"
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={userMenuOpen}
+                  title={user?.username || user?.email}
+                >
+                  <FaUserCircle />
+                </button>
+                {userMenuOpen && (
+                  <div className="user-dropdown" role="menu">
+                    <div className="user-header">{user?.firstName || user?.username || user?.email}</div>
+                    <Link className="user-item" to="/profile" role="menuitem" onClick={() => setUserMenuOpen(false)}>
+                      Profile
+                    </Link>
+                    <div className="user-item" role="menuitem">
+                      <LogoutButton />
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
