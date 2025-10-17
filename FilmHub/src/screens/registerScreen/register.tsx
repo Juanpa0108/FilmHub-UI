@@ -4,7 +4,7 @@ import "./register.css";
 import useAuth from "../../API/auth.js";
 import { Link, useNavigate } from "react-router-dom";
 import AnimatedBackground from "../../components/particles/particles";
-import BrandLogo from "../../components/BrandLogo/BrandLogo"; // ✅ agrega esta línea
+import BrandLogo from "../../components/BrandLogo/BrandLogo"; 
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 type FormData = {
