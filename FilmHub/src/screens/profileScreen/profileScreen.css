@@ -169,3 +169,96 @@ body {
 .profile-card a:hover {
     filter: brightness(1.1);
 }
+/* =============================
+   📱 MEDIA QUERIES RESPONSIVE
+   ============================= */
+
+/* Tablet (≤ 1024px): compactar un poco paddings y tipografías */
+@media (max-width: 1024px) {
+  .profile-container {
+    padding: 28px 30px 34px;
+  }
+
+  .profile-title { font-size: 30px; }
+  .profile-subtitle { font-size: 14px; }
+
+  .profile-sections { gap: 20px; }
+
+  .profile-card {
+    padding: 18px 18px 20px;
+  }
+}
+
+/* Tablet / móvil grande (≤ 768px): 1 columna y formularios en una columna */
+@media (max-width: 768px) {
+  /* altura segura en móviles y menos margen exterior */
+  .profile-wrapper {
+    min-height: 100svh;
+    padding: 24px 16px;
+  }
+
+  .profile-container {
+    width: 96%;
+    padding: 24px 20px 28px;
+    border-radius: 14px;
+  }
+
+  .profile-title { font-size: 26px; margin-bottom: 8px; }
+  .profile-subtitle { font-size: 13px; margin-bottom: 22px; }
+
+  /* Ya tenías las secciones a 1 columna; mantenemos el gap */
+  .profile-sections { gap: 16px; }
+
+  /* Formularios a 1 columna para que no se aprieten */
+  .profile-form { grid-template-columns: 1fr; gap: 12px; }
+  .profile-form .btn { grid-column: 1 / -1; }
+
+  /* Inputs más cómodos al tacto */
+  .profile-form input { padding: 12px; }
+
+  /* Tarjetas ligeramente más compactas */
+  .profile-card { padding: 16px 16px 18px; }
+
+  /* Botones */
+  .btn { padding: 10px 14px; }
+  .btn-back { padding: 8px 12px; }
+}
+
+/* Móviles medianos (≤ 480px): todo a una columna y tamaños legibles */
+@media (max-width: 480px) {
+  .profile-wrapper { padding: 20px 12px; }
+
+  .profile-container {
+    width: 100%;
+    padding: 20px 16px 24px;
+    border-radius: 12px;
+  }
+
+  .profile-topbar { margin-bottom: 6px; }
+
+  .profile-title { font-size: 24px; }
+  .profile-subtitle { font-size: 12.5px; }
+
+  .profile-card-header { gap: 8px; }
+  .profile-icon { font-size: 20px; }
+  .profile-card h3 { font-size: 18px; }
+
+  .profile-card-content { font-size: 13.5px; }
+  .profile-readonly p { margin: 5px 0; }
+
+  .profile-actions { gap: 8px; }
+
+  .btn { padding: 10px 12px; }
+}
+
+/* Teléfonos pequeños (≤ 360px): aún más compacto sin cambiar estilo */
+@media (max-width: 360px) {
+  .profile-title { font-size: 22px; }
+  .profile-subtitle { font-size: 12px; }
+
+  .profile-container { padding: 18px 14px 22px; }
+
+  .profile-card { padding: 14px; }
+  .profile-form input { padding: 11px; }
+  .btn { padding: 9px 11px; }
+}

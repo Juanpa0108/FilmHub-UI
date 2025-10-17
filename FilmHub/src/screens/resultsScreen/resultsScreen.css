@@ -28,3 +28,75 @@
     margin: 0;
     list-style: none;
 }
+/* =============================
+   📱 MEDIA QUERIES — RESULTS SCREEN
+   ============================= */
+
+/* Tablet (≤ 1024px): ajusta márgenes y fuente */
+@media (max-width: 1024px) {
+  .results-container {
+    margin: 20px 40px;
+  }
+
+  .results-header h1 {
+    font-size: 22px;
+  }
+}
+
+/* Tablet vertical / móvil grande (≤ 768px) */
+@media (max-width: 768px) {
+  .results-container {
+    margin: 15px 20px;
+    border-radius: 12px;
+  }
+
+  .results-header {
+    padding: 16px;
+  }
+
+  .results-header h1 {
+    font-size: 20px;
+  }
+
+  .movies-result-list {
+    padding: 8px;
+  }
+}
+
+/* Móviles medianos (≤ 480px): todo más compacto */
+@media (max-width: 480px) {
+  .results-container {
+    margin: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  .results-header {
+    padding: 14px 10px;
+  }
+
+  .results-header h1 {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .movies-result-list {
+    padding: 6px;
+  }
+}
+
+/* Teléfonos pequeños (≤ 360px): aún más compacto */
+@media (max-width: 360px) {
+  .results-container {
+    margin: 8px;
+    border-radius: 8px;
+  }
+
+  .results-header {
+    padding: 12px 8px;
+  }
+
+  .results-header h1 {
+    font-size: 17px;
+  }
+}

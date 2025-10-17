@@ -68,9 +68,6 @@ const Principal: React.FC = () => {
           <Link to="/" className="logo-link">
             <BrandLogo className="logo" /> {/* ✅ reemplaza <img> */}
           </Link>
-          <span className="brand-text">
-            Film <span className="brand-subtext">Hub</span>
-          </span>
         </div>
 
         <div className="header">

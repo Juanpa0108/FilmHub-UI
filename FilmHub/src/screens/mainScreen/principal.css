@@ -339,3 +339,79 @@ body {
 .logo-link {
   text-decoration: none;
 }
+/* --- Logo en la barra superior --- */
+.logo-link .logo {
+  width: 150px;      /* Aumentado notablemente (antes 70px) */
+  height: auto;
+  display: block;
+  transition: transform 0.25s ease;
+  margin-right: 10px;
+}
+
+.logo-link:hover .logo {
+  transform: scale(1.08);
+}
+
+/* Centrar verticalmente el logo con el resto de la barra */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* =============================
+   📱 MEDIA QUERIES RESPONSIVE
+   ============================= */
+/* ====== FIX NAV EN MÓVIL: que no tape contenido ====== */
+@media (max-width: 768px) {
+  /* La barra deja de ser fixed para no superponerse */
+  .navbar {
+    position: sticky;   /* antes: fixed */
+    top: 0;
+    left: auto;
+    right: auto;
+    min-height: 56px;
+    padding: 8px 12px;  /* más compacta */
+    z-index: 1000;
+  }
+
+  /* Como ya no es fixed, quitamos el padding extra arriba */
+  .app-container {
+    padding-top: 0;
+  }
+
+  /* Compactar marca */
+  .logo { width: 28px; }
+  .brand-text { font-size: 18px; line-height: 1; }
+  .brand-subtext { display: none; } /* opcional: comenta esta línea si quieres verlo */
+
+  /* Header más apretado y con wrap */
+  .header {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  /* Buscador a ancho completo y en segunda línea */
+  .search-bar {
+    width: 100%;
+    max-width: 420px;
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  /* Botones y menú en la primera línea, a los lados */
+  .menu-container { order: 1; }
+  .auth-buttons   { order: 2; gap: 6px; }
+  .auth-buttons a {
+    font-size: 13px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+}
+
+/* Extra compacto para teléfonos pequeños */
+@media (max-width: 420px) {
+  .navbar { padding: 8px 10px; }
+  .brand-text { font-size: 16px; }
+  .auth-buttons a { font-size: 12px; padding: 5px 8px; }
+}

@@ -50,11 +50,12 @@ const Login: React.FC = () => {
     await login(formData); // si login espera otro shape, tipéalo en useAuth
   };
 
-  return (
+ return (
     <div className="login-wrapper">
       <WavesBackground />
-      <div className="login-container">
+      <div className="login-container" role="main">
         <h2>Welcome!</h2>
+
         <div id="id-register-link">
           <p>
             Don't you have an account?
@@ -70,6 +71,8 @@ const Login: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            autoComplete="email"
+            inputMode="email"
           />
           <PasswordInput
             name="password"
@@ -88,15 +91,14 @@ const Login: React.FC = () => {
 
         <div className="social-login">
           <p>Or sign in with</p>
-          <div className="social-icons">
-            <button className="icon-btn google" type="button"><FaGoogle /></button>
-            <button className="icon-btn github" type="button"><FaGithub /></button>
-            <button className="icon-btn twitter" type="button"><FaTwitter /></button>
+          <div className="social-icons" role="group" aria-label="Social sign-in">
+            <button className="icon-btn google" type="button" aria-label="Sign in with Google"><FaGoogle /></button>
+            <button className="icon-btn github" type="button" aria-label="Sign in with GitHub"><FaGithub /></button>
+            <button className="icon-btn twitter" type="button" aria-label="Sign in with Twitter/X"><FaTwitter /></button>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 export default Login;
