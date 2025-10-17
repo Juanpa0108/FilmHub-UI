@@ -1,162 +1,259 @@
-/* Reseteo de márgenes y estilos básicos del body */
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: var(--bg); /* negro intenso */
-    font-family: "Arial", sans-serif; /* Fuente general */
-}
-  
-/* Contenedor principal del login */
-.login-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-}
-  
-/* Caja del formulario de login */
-.login-container {
-    width: 350px;
-    padding: 25px;
-    background: var(--panel);
-    backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
-    text-align: center; /* Centrar contenido */
-    color: white; /* Texto en color blanco */
-}
-  
-/* Estilo del título */
-h2 {
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-  
-/* Estilo de los inputs del formulario */
-.login-form input {
-    width: 90%;
-    padding: 12px;
-    margin: 8px 0; 
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    border: 1px solid rgba(255,255,255,0.06);
-    color: white;
-    outline: none;
+:root {
+  --space: clamp(12px, 2.8vw, 24px);
+  --radius: 12px;
+  --fs-body: clamp(14px, 1.6vw, 16px);
+  --fs-h2: clamp(20px, 4.5vw, 26px);
+  /* Espera variables globales: --bg, --panel, --brand */
 }
 
-/* Password input toggle is handled by a reusable component; no extra styles needed here */
-  
-/* Botón de inicio de sesión */
-.login-form button[type="submit"] {
-    width: 97%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    /* Botón con color secundario var(--brand) */
-    background: linear-gradient(90deg, var(--brand), var(--brand));
-    color: white;
-    cursor: pointer;
-    transition: 0.3s; /* Transición suave */
+* {
+  box-sizing: border-box;
 }
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif; /* Fuente general */
+  font-size: var(--fs-body);
+  background: var(--bg); /* negro intenso */
+  color: white;
+}
+
+/* =============================
+   Contenedor principal del login
+   (ajustado para móviles)
+   ============================= */
+.login-wrapper {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh; 
+  padding: var(--space);
+  overflow: hidden;
+}
+
+/* =============================
+   Caja del formulario de login
+   ============================= */
+.login-container {
+  width: min(350px, 100%); /* ahora fluido */
+  padding: 25px;
+  background: var(--panel);
+  backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
+  text-align: center; /* Centrar contenido */
+  color: white; /* Texto en color blanco */
+}
+
+/* =============================
+   Estilo del título
+   ============================= */
+h2 {
+  margin-bottom: 10px;
+  font-size: var(--fs-h2);
+}
+
+/* =============================
+   Estilo de los inputs del formulario
+   ============================= */
+.login-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 4px 0; 
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: white;
+  outline: none;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Password input toggle es manejado por un componente reusable */
   
+/* =============================
+   Botón de inicio de sesión
+   ============================= */
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  background: linear-gradient(90deg, var(--brand), var(--brand));
+  color: white;
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+  min-height: 44px; /* mejora accesibilidad táctil */
+}
+
 /* Efecto al pasar el mouse sobre el botón de inicio de sesión */
 .login-form button[type="submit"]:hover {
-    filter: brightness(1.1); transform: translateY(-1px);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
-  
-/* Estilo del texto "Or sign in with" */
+
+/* =============================
+   Estilo del texto "Or sign in with"
+   ============================= */
 .social-login p {
-    margin: 15px 0 10px;
-    font-size: 14px;
+  margin: 15px 0 10px;
+  font-size: 14px;
 }
-  
+
 /* Contenedor de los botones de redes sociales */
 .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Espaciado entre botones */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
-  
+
 /* Estilos generales de los botones de redes sociales */
 .icon-btn {
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s; /* Transición suave */
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s ease, filter .15s ease;
+  height: 48px;
+  width: 100%;
 }
-  
+
 /* Estilo para el botón de Google */
 .google {
-    background: #db4437; /* Rojo */
-    color: white;
+  background: #db4437; /* Rojo */
+  color: white;
 }
-  
+
 /* Estilo para el botón de GitHub */
 .github {
-    background: #0f0f14; 
-    color: white;
+  background: #0f0f14; 
+  color: white;
 }
-  
+
 /* Estilo para el botón de Twitter */
 .twitter {
-    background: #1da1f2; /* Azul */
-    color: white;
+  background: #1da1f2; /* Azul */
+  color: white;
 }
-  
+
 /* Efecto de agrandamiento al pasar el mouse sobre los botones de redes sociales */
 .icon-btn:hover {
-    transform: translateY(-2px);
-} 
+  transform: translateY(-2px);
+}
 
-/* Estilo del enlace de registro */
+/* =============================
+   Estilo del enlace de registro
+   ============================= */
 #id-register-link {
-    margin-top: 20px;
-    font-size: 14px;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
 /* Estilo del enlace de registro cuando no está en hover */
 #id-register-link a {
-    color: var(--brand);
-    text-decoration: none;
-    font-weight: bold;
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: bold;
 }
 
-/* Estilo del enlace de recuperar contraseña */
+/* =============================
+   Estilo del enlace de recuperar contraseña
+   ============================= */
 #recovery-link {
-    margin-top: 15px;   
-    font-size: 14px;
+  margin-top: 15px;   
+  font-size: 14px;
 }
 
 /* Estilo del enlace de recovery */
 #recovery-link a {
-    color: var(--brand);
-    text-decoration: none;
-    font-weight: bold;
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: bold;
 }
-#recovery-link a:hover { filter: brightness(1.1); }
+
+#recovery-link a:hover { 
+  filter: brightness(1.1);
+}
 
 /* Estilo del enlace de registro cuando el usuario pasa el mouse */
 #id-register-link a:hover {
-    filter: brightness(1.1);
+  filter: brightness(1.1);
 }
 
 /* Asegurar que visited no caiga al azul por defecto */
 #id-register-link a:visited,
 #recovery-link a:visited {
-    color: var(--brand);
+  color: var(--brand);
+}
+
+/* =============================
+   Ajuste del fondo con WavesBackground
+   (para que quede detrás del contenido)
+   ============================= */
+.login-wrapper > *:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.login-container,
+#id-register-link,
+#recovery-link,
+.social-login {
+  position: relative;
+  z-index: 1;
+}
+
+/* =============================
+   MEDIA QUERIES (nuevos)
+   ============================= */
+
+/* Teléfonos pequeños */
+@media (max-width: 480px) {
+  .login-container {
+    width: 100%;
+    padding: 18px;
+    border-radius: 10px;
+  }
+
+  .social-icons {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 15px;
+  }
+}
+
+/* Pantallas muy pequeñas (<360px) */
+@media (max-width: 360px) {
+  .social-icons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Usuarios con reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

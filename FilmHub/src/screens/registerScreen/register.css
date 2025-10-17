@@ -118,3 +118,89 @@ h2 { font-size: 22px; margin-bottom: 8px; }
 .login-link { margin-top: 20px; font-size: 14px; }
 .login-link a { color: var(--brand); text-decoration: none; font-weight: bold; }
 .login-link a:hover { filter: brightness(1.1); }
+/* =============================
+   📱 MEDIA QUERIES — REGISTER
+   ============================= */
+
+/* Tablets (≤ 1024px): ajustes suaves */
+@media (max-width: 1024px) {
+  #header-content { max-width: 560px; }
+  .register-container { padding: 28px; }
+}
+
+/* Tablet vertical / móvil grande (≤ 768px) */
+@media (max-width: 768px) {
+  /* Evita problemas con 100vh en móviles y deja respiración lateral */
+  body {
+    min-height: 100svh;
+    align-items: flex-start;      /* que el card no quede demasiado centrado si aparece teclado */
+    padding: 24px 16px;           /* margen interior en móvil */
+  }
+
+  #header { padding-top: 16px; }
+  #header-content { margin: 16px auto; padding: 0 4px; }
+  #header h2 { font-size: 20px; }
+  #header .subtitle { font-size: 13px; }
+
+  .register-wrapper { padding: 16px 0 40px; }
+
+  /* El card ocupa el ancho disponible pero respetando tu look */
+  .register-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 22px;
+    border-radius: 12px;
+  }
+
+  /* Inputs y botón a ancho completo en móvil */
+  .register-form input { width: 100%; }
+  .btn-gradient { width: 100%; }
+
+  /* Requisitos un poco más compactos */
+  .requirements-wrapper { margin-top: 10px; }
+  .progress-bar { height: 7px; }
+
+  /* Mantén 2 columnas acá (se vuelve 1 en ≤480px) */
+  .req-list { gap: 6px; }
+}
+
+/* Móviles medianos (≤ 480px) */
+@media (max-width: 480px) {
+  body { padding: 18px 12px; }
+
+  #header h2 { font-size: 19px; }
+  #header .subtitle { font-size: 12.5px; }
+
+  .register-container {
+    padding: 18px 16px;
+    border-radius: 10px;
+  }
+
+  .register-form input { font-size: 15px; padding: 11px; }
+
+  .requirements-wrapper { margin-top: 8px; }
+  .progress-bar { height: 6px; }
+
+  /* Requisitos en una sola columna para que no se aprieten */
+  .req-list {
+    grid-template-columns: 1fr;
+    font-size: 12.5px;
+    gap: 4px;
+  }
+
+  .social-login-register { margin-top: 16px; }
+  .social-icons-register { gap: 12px; }
+  .icon-btn { width: 42px; height: 42px; font-size: 18px; }
+
+  .login-link { font-size: 13px; margin-top: 16px; }
+}
+
+/* Teléfonos pequeños (≤ 360px) */
+@media (max-width: 360px) {
+  #header h2 { font-size: 18px; }
+  .register-container { padding: 16px 12px; }
+  .register-form input { padding: 10px; font-size: 14.5px; }
+  .btn-gradient { padding: 11px; font-size: 15px; }
+  .req-list { font-size: 12px; }
+  .icon-btn { width: 40px; height: 40px; font-size: 17px; }
+}

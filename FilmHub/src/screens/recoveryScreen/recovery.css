@@ -101,3 +101,66 @@ button {
         transform: translateY(0);
     }
 }
+/* =============================
+   📱 MEDIA QUERIES RESPONSIVE
+   ============================= */
+
+/* Tablets (≤ 1024px): ajustes suaves */
+@media (max-width: 1024px) {
+  .recovery-container {
+    max-width: 420px;   /* un pelín más holgado si hay teclado */
+    padding: 24px;
+  }
+}
+
+/* Tablet vertical / móvil grande (≤ 768px) */
+@media (max-width: 768px) {
+  /* Evita saltos del 100vh en móviles y permite que el card respire */
+  body {
+    min-height: 100svh;  /* más fiable que 100vh en móvil */
+    align-items: flex-start;  /* deja el card un poco más arriba */
+    padding: 24px 16px;       /* margen interior en móvil */
+  }
+
+  .recovery-container {
+    width: 100%;
+    margin: 0 auto;           /* centrado vertical controlado por el body */
+    padding: 22px;
+    border-radius: 12px;
+  }
+
+  h2 { font-size: 22px; }
+  p  { font-size: 13.5px; }
+
+  .input-container { padding: 10px 12px; }
+  input { font-size: 15px; }
+
+  button { padding: 12px; font-size: 15px; }
+}
+
+/* Móviles medianos (≤ 480px) */
+@media (max-width: 480px) {
+  body { padding: 18px 12px; }
+
+  .recovery-container {
+    padding: 18px 16px;
+    border-radius: 10px;
+  }
+
+  h2 { font-size: 20px; }
+  p  { font-size: 13px; }
+
+  .input-container { padding: 9px 10px; }
+  input { font-size: 14.5px; }
+
+  button { padding: 11px; font-size: 14.5px; }
+}
+
+/* Teléfonos pequeños (≤ 360px) */
+@media (max-width: 360px) {
+  .recovery-container { padding: 16px 12px; }
+  h2 { font-size: 19px; }
+  p  { font-size: 12.5px; }
+  .input-container { padding: 8px 10px; }
+  button { padding: 10px; font-size: 14px; }
+}
