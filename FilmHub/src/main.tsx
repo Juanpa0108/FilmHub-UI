@@ -13,6 +13,7 @@ import CategoriesScreen from "./screens/categoriesScreen/categoriesScreen";
 import MyReviewsScreen from "./screens/myReviewsScreen/myReviewsScreen";
 import PremieresScreen from "./screens/premieresScreen/PremieresScreen";
 import Profile from "./screens/profileScreen/profileScreen";
+import Help from "./screens/helpScreen/help";
 
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -31,6 +32,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/premieres" element={<PremieresScreen />} />
           <Route path="/movie/:id" element={<MovieDetail />} /> 
           <Route path="/profile" element={<Profile />} /> 
+          <Route path="/help" element={<Help />} />
         </Routes>
 
         {/* Footer global */}
@@ -44,6 +46,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               {/* Si estas rutas no existen aún, déjalas como # o crea páginas vacías */}
               <a href="/about">About</a>
               <a href="/contact">Contact</a>
+              <a href="/help">Help</a>
               <a href="/terms">Terms of Use</a>
               <a href="/privacy">Privacy Policy</a>
             </div>

@@ -2,6 +2,7 @@
 import MovieContent from "../MovieContent/MovieContent";
 import "../../screens/carrouselScreen/carrouselScreen.css";
 import type { Movie } from "../../types/movie"; // ✅ usa el tipo centralizado
+import type { ReactNode } from "react";
 
 type OnMovieAction = (id: string | number) => void;
 
@@ -11,6 +12,7 @@ type MovieBannerProps = {
   activeMovieId: string | number;
   onReviewClick: OnMovieAction;
   onAddToList: OnMovieAction;
+  children?: ReactNode;
 };
 
 export default function MovieBanner({
@@ -19,6 +21,7 @@ export default function MovieBanner({
   activeMovieId,
   onReviewClick,
   onAddToList,
+  children,
 }: MovieBannerProps) {
   return (
     <div
@@ -39,6 +42,7 @@ export default function MovieBanner({
           onAddToList={onAddToList}
         />
       ))}
+      {children}
     </div>
   );
 }

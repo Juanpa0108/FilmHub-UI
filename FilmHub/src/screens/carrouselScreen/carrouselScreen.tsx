@@ -47,13 +47,14 @@ export default function CarrouselScreen() {
           activeMovieId={activeMovieId}
           onReviewClick={handleReviewClick}
           onAddToList={handleAddToList}
-        />
-        <MovieCarousel
-          /* role="movie-carousel" <-- ❌ */
-          data-testid="movie-carousel"         /* ✅ */
-          movies={moviesData as Movie[]}
-          onMovieSelect={handleMovieSelect}
-        />
+        >
+          <MovieCarousel
+            /* role="movie-carousel" <-- ❌ */
+            data-testid="movie-carousel"         /* ✅ */
+            movies={moviesData as Movie[]}
+            onMovieSelect={handleMovieSelect}
+          />
+        </MovieBanner>
       </div>
     </div>
   );

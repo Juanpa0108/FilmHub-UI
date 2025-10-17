@@ -13,6 +13,7 @@ body {
     min-height: 100vh;
     height: 100%;
     padding-top: 60px; /* Espacio para el navbar fixed */
+    overflow-x: hidden; /* evita scroll horizontal accidental */
 }
 
 /* Navbar (se mantiene igual) */
@@ -21,7 +22,7 @@ body {
     margin-top: 0px;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -195,16 +196,18 @@ body {
 
 /* Carrusel Infinito (banner superior) */
 .carrusel-banner {
-    width: 100vw;
-    margin: 20px 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 16px auto 8px;
+    padding: 0 16px;
 }
 
 /* Contenedor del carrusel estático */
 .static-carousel-container {
-    width: 100vw;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 16px;
 }
 
 /* Estilos del carrusel de películas */
@@ -308,33 +311,22 @@ body {
 
 .movie-carousel-section {
     position: relative;
-    padding-top: 60px;
-    width: 100vw;
-    left: 50%;
-    right: 0;
-    transform: translateX(-50%);
-    margin-top: 48px;
-    padding: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding: 0 16px;
     z-index: 1;
 }
 
-.carrousel-screen .banner {
-    position: relative;
-    top: 0;
-    left: 0;
-    
-    height: calc(100vh - 60px);
-    padding-top: 60px;
-    width: 100vw;
-    min-width: 100vw;
-    margin: 0;
-    padding: 0;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    overflow: hidden;
-    z-index: 1;
+/* Resultados centrados y alineados con el grid */
+.results-banner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 16px;
 }
+
+/* .carrousel-screen .banner styles live in carrouselScreen.css to avoid conflicts */
 
 .logo-link {
   text-decoration: none;
@@ -407,6 +399,11 @@ body {
     padding: 6px 10px;
     white-space: nowrap;
   }
+
+    /* Carruseles ocupan todo el ancho disponible */
+    .carousel-track { width: 100%; }
+    .carousel-arrow { width: 36px; height: 36px; font-size: 18px; }
+    .movies-carousel { margin: 24px 0; }
 }
 
 /* Extra compacto para teléfonos pequeños */
@@ -414,4 +411,15 @@ body {
   .navbar { padding: 8px 10px; }
   .brand-text { font-size: 16px; }
   .auth-buttons a { font-size: 12px; padding: 5px 8px; }
+}
+
+/* ====== Tarjetas de películas: columnas responsivas ====== */
+@media (max-width: 1200px) {
+    .movie-card { flex: 0 0 calc(33.333% - 15px); }
+}
+@media (max-width: 992px) {
+    .movie-card { flex: 0 0 calc(50% - 15px); }
+}
+@media (max-width: 600px) {
+    .movie-card { flex: 0 0 100%; }
 }

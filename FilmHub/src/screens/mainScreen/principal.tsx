@@ -54,10 +54,10 @@ const Principal: React.FC = () => {
   const titulos = moviesData.map((p) => p.title);
 
   const images = [
-    "/images/img1.jpg",
-    "/images/img2.jpg",
-    "/images/img3.jpg",
-    "/images/img4.jpg",
+    "/font-awesome/images/img1.jpg",
+    "/font-awesome/images/img2.jpg",
+    "/font-awesome/images/img3.jpg",
+    "/font-awesome/images/img4.jpg",
   ];
 
   return (
