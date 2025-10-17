@@ -3,7 +3,7 @@
   --panel: #0c0c0b;     /* unificamos paneles al mismo negro */
   --text: #e8e8ea;      /* texto claro */
   --muted: #a6a6b0;     /* texto secundario */
-  --brand: #F59223;     /* acento del logo (actualizado a color solicitado) */
+  --brand: #f88f0c;     /* secondary (brand) exact */
 }
 
 html, body, #root {

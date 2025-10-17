@@ -65,8 +65,8 @@ input {
 }
 
 button {
-    /* Botón de recovery con color solicitado */
-    background: linear-gradient(90deg, #F59223, var(--brand));
+    /* Botón de recovery con color secundario */
+    background: linear-gradient(90deg, var(--brand), var(--brand));
     color: var(--text);
     padding: 12px;
     border: none;

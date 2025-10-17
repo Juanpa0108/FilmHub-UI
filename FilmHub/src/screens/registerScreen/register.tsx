@@ -5,6 +5,7 @@ import useAuth from "../../API/auth.js";
 import { Link, useNavigate } from "react-router-dom";
 import AnimatedBackground from "../../components/particles/particles";
 import BrandLogo from "../../components/BrandLogo/BrandLogo"; // ✅ agrega esta línea
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 type FormData = {
   username: string;
@@ -163,21 +164,22 @@ const Register: React.FC = () => {
             onChange={handleChange}
             required
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
+            placeholder="Password"
             required
+            autoComplete="new-password"
           />
-          <input
-            type="password"
+          <PasswordInput
             name="confirmPassword"
-            placeholder="Confirm password"
             value={formData.confirmPassword}
             onChange={handleChange}
+            placeholder="Confirm password"
             required
+            autoComplete="new-password"
+            ariaLabel="Confirm password"
           />
           {/* Progress bar and requirements */}
           <div className="requirements-wrapper">
@@ -205,6 +207,7 @@ const Register: React.FC = () => {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
+
 
         <div className="social-login-register">
           <p>Or sign up with</p>

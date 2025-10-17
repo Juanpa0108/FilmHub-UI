@@ -49,29 +49,26 @@ h2 {
     color: white;
     outline: none;
 }
-  
-/* Color del placeholder dentro del input */
-.login-form input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
+
+/* Password input toggle is handled by a reusable component; no extra styles needed here */
   
 /* Botón de inicio de sesión */
-.login-form button {
+.login-form button[type="submit"] {
     width: 97%;
     padding: 10px;
     margin-top: 10px;
     border: none;
     border-radius: 10px;
     font-size: 16px;
-    /* Usamos el color solicitado en un degradado sutil hacia la variable --brand (ahora también #F59223) */
-    background: linear-gradient(90deg, #F59223, var(--brand));
+    /* Botón con color secundario var(--brand) */
+    background: linear-gradient(90deg, var(--brand), var(--brand));
     color: white;
     cursor: pointer;
     transition: 0.3s; /* Transición suave */
 }
   
 /* Efecto al pasar el mouse sobre el botón de inicio de sesión */
-.login-form button:hover {
+.login-form button[type="submit"]:hover {
     filter: brightness(1.1); transform: translateY(-1px);
 }
   
@@ -151,12 +148,15 @@ h2 {
     text-decoration: none;
     font-weight: bold;
 }
-
-#recovery-link a:hover {
-    color: #000000;
-}
+#recovery-link a:hover { filter: brightness(1.1); }
 
 /* Estilo del enlace de registro cuando el usuario pasa el mouse */
 #id-register-link a:hover {
-    color: #ff5277;
+    filter: brightness(1.1);
+}
+
+/* Asegurar que visited no caiga al azul por defecto */
+#id-register-link a:visited,
+#recovery-link a:visited {
+    color: var(--brand);
 }

@@ -9,12 +9,12 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: "¿Cerrar sesión?",
-      text: "¿Estás seguro que quieres salir?",
+      title: "Log out?",
+      text: "Are you sure you want to end your session?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, salir",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "Cancel",
     });
 
     if (result.isConfirmed) {
@@ -23,8 +23,8 @@ const LogoutButton = () => {
   };
 
   return (
-    <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
-      Cerrar sesión
+    <button onClick={handleLogout} className="logout-btn">
+      Logout
     </button>
   );
 };

@@ -75,19 +75,21 @@ const useAuth = () => {
         email: userInfo.email,
         password: userInfo.password,
       };
-      const response = await fetch(apiPath("/api/users/register/"), {
+      const response = await fetch(apiPath("/api/users/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.username) {
-          alert("The username is already registered");
-        } else if (errorData.email) {
-          alert("The email is already registered");
-        } else {
+        try {
+          const errorData = await response.json();
+          if (response.status === 409 && errorData?.error) {
+            alert(errorData.error);
+            return;
+          }
+          alert(errorData?.error || "An unexpected error occurred");
+        } catch (_e) {
           alert("An unexpected error occurred");
         }
       } else {
@@ -110,7 +112,13 @@ const useAuth = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error en la autenticación");
+        // Try to read backend error (e.g., 400 validations, 401 invalid credentials)
+        try {
+          const err = await response.json();
+          throw new Error(err?.error || "Error en la autenticación");
+        } catch (_) {
+          throw new Error("Error en la autenticación");
+        }
       }
 
       const data = await response.json();
@@ -278,7 +286,96 @@ const checkTokenExpiration = async () => {
     }
   };
 
-  return { state, register, login, logout, refreshToken, user: state.user };
+  const updateProfile = async (updates) => {
+    try {
+      const token = state.accessToken || localStorage.getItem("accessToken");
+      const response = await fetch(apiPath("/api/auth/user"), {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        credentials: "include",
+        body: JSON.stringify(updates),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error || "Failed to update profile");
+      }
+      const data = await response.json();
+      const updated = data.user || {};
+      const newUser = {
+        ...(JSON.parse(localStorage.getItem("user")) || {}),
+        firstName: updated.firstName ?? state.user?.firstName,
+        lastName: updated.lastName ?? state.user?.lastName,
+        email: updated.email ?? state.user?.email,
+        age: updated.age ?? state.user?.age,
+      };
+      localStorage.setItem("user", JSON.stringify(newUser));
+      dispatch({ type: actions.SET_USER, user: newUser, accessToken: state.accessToken });
+      Swal.fire({ icon: "success", title: "Profile updated", timer: 1500, showConfirmButton: false });
+      return newUser;
+    } catch (e) {
+      Swal.fire({ icon: "error", title: "Update failed", text: e.message || "Try again later" });
+      throw e;
+    }
+  };
+
+  const changePassword = async ({ currentPassword, newPassword, confirmNewPassword }) => {
+    try {
+      const token = state.accessToken || localStorage.getItem("accessToken");
+      const response = await fetch(apiPath("/api/auth/change-password"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        credentials: "include",
+        body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword }),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error || "Failed to change password");
+      }
+      Swal.fire({ icon: "success", title: "Password changed", timer: 1500, showConfirmButton: false });
+      return true;
+    } catch (e) {
+      Swal.fire({ icon: "error", title: "Change failed", text: e.message || "Try again later" });
+      throw e;
+    }
+  };
+
+  const fetchCurrentUser = async () => {
+    try {
+      const token = state.accessToken || localStorage.getItem("accessToken");
+      if (!token) return null;
+      const response = await fetch(apiPath("/api/auth/user"), {
+        method: "GET",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        credentials: "include",
+      });
+      if (!response.ok) return null;
+      const data = await response.json();
+      const apiUser = data.user || {};
+      const newUser = {
+        ...(JSON.parse(localStorage.getItem("user")) || {}),
+        id: apiUser.id,
+        firstName: apiUser.firstName,
+        lastName: apiUser.lastName,
+        email: apiUser.email,
+        age: apiUser.age,
+      };
+      localStorage.setItem("user", JSON.stringify(newUser));
+      dispatch({ type: actions.SET_USER, user: newUser, accessToken: state.accessToken || localStorage.getItem("accessToken") });
+      return newUser;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  return { state, register, login, logout, refreshToken, updateProfile, changePassword, fetchCurrentUser, user: state.user };
 };
 
 export default useAuth;

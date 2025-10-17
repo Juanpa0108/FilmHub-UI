@@ -3,8 +3,9 @@ import { FaGoogle, FaGithub, FaTwitter } from "react-icons/fa";
 import "./login.css";
 import Swal from "sweetalert2";
 import useAuth from "../../API/auth.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WavesBackground from "../../components/waves/waves";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 type FormData = {
   email: string;
@@ -12,29 +13,18 @@ type FormData = {
 };
 
 const Login: React.FC = () => {
-  const { login, logout } = useAuth();
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
 
-  // Verificar si el usuario ya tiene sesión iniciada
+  // Si ya hay sesión activa, redirigir silenciosamente al home
   useEffect(() => {
-    const stored = localStorage.getItem("user"); // string | null
-    const user = stored ? JSON.parse(stored) as { expirationDate?: number } : null;
-
+    const stored = localStorage.getItem("user");
+    const user = stored ? (JSON.parse(stored) as { expirationDate?: number }) : null;
     if (user?.expirationDate && user.expirationDate > Date.now()) {
-      Swal.fire({
-        icon: "info",
-        title: "You already have an active session",
-        text: "If you want to log in with another account, you must log out first.",
-        showCancelButton: true,
-        confirmButtonText: "Log out",
-        cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          logout();
-        }
-      });
+      navigate("/", { replace: true });
     }
-  }, [logout]); // incluye logout para contentar al linter
+  }, [navigate]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.target;
@@ -81,13 +71,13 @@ const Login: React.FC = () => {
             onChange={handleChange}
             required
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
+            placeholder="Password"
             required
+            autoComplete="current-password"
           />
           <button type="submit">Sign in</button>
         </form>
