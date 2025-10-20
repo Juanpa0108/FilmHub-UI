@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import useAuth from "../../API/auth"; 
+import { useAuthContext } from "../../API/authContext"; 
 
 const LogoutButton = () => {
-  const { logout } = useAuth();
+  const { logout } = useAuthContext() as any;
   const navigate = useNavigate();
 
   const handleLogout = async () => {

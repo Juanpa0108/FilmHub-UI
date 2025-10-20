@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../API/auth";
+import { useAuthContext } from "../../API/authContext";
 import type { Movie } from "../../types/movie"; // ajusta el path si usas alias "@"
 import "./movieResult.css";
 
@@ -9,7 +9,8 @@ type MovieResultProps = {
 
 export default function MovieResult({ movie }: MovieResultProps) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { state } = useAuthContext() as any;
+  const user = state?.user;
 
   if (!movie) return null;
 
