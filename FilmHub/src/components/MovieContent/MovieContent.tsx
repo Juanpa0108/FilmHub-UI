@@ -1,6 +1,6 @@
-// src/components/MovieContent/MovieContent.tsx
 import "../../screens/carrouselScreen/carrouselScreen.css";
-import type { Movie } from "../../types/movie"; // 👈 usa el tipo centralizado
+import type { Movie } from "../../types/movie";
+import { useNavigate } from "react-router-dom";
 
 type MovieContentProps = {
   movie: Movie;
@@ -15,13 +15,15 @@ export default function MovieContent({
   onReviewClick,
   onAddToList,
 }: MovieContentProps) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`content ${movie.id} ${isActive ? "active" : ""}`}
       data-testid={`movie-content-${movie.id}`}
     >
       <img
-        src={movie.titleImage ?? movie.thumbnailImage ?? "/placeholder.jpg"} // 👈 fallback opcional
+        src={movie.titleImage ?? movie.thumbnailImage ?? "/placeholder.jpg"}
         alt={movie.title}
         className="movie-title-image"
       />
@@ -38,16 +40,18 @@ export default function MovieContent({
       <p className="movie-description">{movie.description}</p>
 
       <div className="button">
+        {/* 🎥 Watch Now navigates to PlayerScreen with movie ID */}
         <a
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            onReviewClick(movie.id);
+            navigate(`/player/${movie.id}`);
           }}
         >
-          <i className="fa fa-play" aria-hidden="true" /> Reviews
+          <i className="fa fa-play" aria-hidden="true" /> Watch Now
         </a>
 
+        {/* ➕ Add to List */}
         <a
           href="#"
           onClick={(e) => {
