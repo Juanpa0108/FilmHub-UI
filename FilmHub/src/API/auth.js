@@ -33,18 +33,60 @@ const setExpirationDate = (seconds) => {
 
 
 
+// Utilidad: fetch con timeout y abort
+const fetchWithTimeout = async (url, options = {}, timeoutMs = 15000) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return res;
+  } catch (e) {
+    clearTimeout(id);
+    throw e;
+  }
+};
+
+let lastWarmTs = 0;
+const warmUpServer = async () => {
+  const now = Date.now();
+  if (now - lastWarmTs < 60_000) return true; // evita calentar repetido en <60s
+  try {
+    const r = await fetchWithTimeout(apiPath("/health"), { cache: "no-store" }, 2500);
+    lastWarmTs = Date.now();
+    return r.ok;
+  } catch (_) {
+    return false;
+  }
+};
+
 const useAuth = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigate = useNavigate();
   const sessionPromptActive = useRef(false);
 
   useEffect(() => {
+    // Warm up API on first mount to avoid cold start delays (Render, etc.)
+    warmUpServer();
+
     checkTokenExpiration();
     const interval = setInterval(() => {
       checkTokenExpiration();
     }, 60000); // Verificar cada minuto
 
-    return () => clearInterval(interval);
+    // Keep-alive opcional para reducir cold start durante la sesión
+    const keepAliveEnabled = Boolean(import.meta?.env?.VITE_API_KEEPALIVE);
+    const keepAliveMs = Number(import.meta?.env?.VITE_API_KEEPALIVE_MS || 14 * 60 * 1000);
+    const keepAliveId = keepAliveEnabled
+      ? setInterval(() => {
+          fetch(apiPath("/health"), { cache: "no-store" }).catch(() => {});
+        }, keepAliveMs)
+      : null;
+
+    return () => {
+      clearInterval(interval);
+      if (keepAliveId) clearInterval(keepAliveId);
+    };
   }, []);
   // Sincronizar el estado con el localStorage al cargar la página o al volver a la pestaña
   useEffect(() => {
@@ -103,13 +145,38 @@ const useAuth = () => {
 
   const login = async (userInfo) => {
     try {
-      const response = await fetch(apiPath(`/api/auth/login`), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        mode: "cors",
-        credentials: "include",
-        body: JSON.stringify(userInfo),
-      });
+      // Calienta el servidor antes de intentar loguear
+      warmUpServer();
+      // Mensaje sutil por si el servidor está frío (sin UI visible aquí)
+      let slowTimer = setTimeout(() => {
+        try { console.info("Despertando servidor…") } catch {}
+      }, 1500);
+      let response;
+      try {
+        response = await fetchWithTimeout(apiPath(`/api/auth/login`), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          mode: "cors",
+          credentials: "include",
+          body: JSON.stringify(userInfo),
+        }, 15000);
+      } catch (err) {
+        // Un intento de reintento rápido si la 1a vez expiró/abortó
+        try {
+          await warmUpServer();
+          response = await fetchWithTimeout(apiPath(`/api/auth/login`), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "cors",
+            credentials: "include",
+            body: JSON.stringify(userInfo),
+          }, 15000);
+        } catch (e2) {
+          clearTimeout(slowTimer);
+          throw new Error("El servidor tardó demasiado en responder. Intenta nuevamente.");
+        }
+      }
+      clearTimeout(slowTimer);
 
       if (!response.ok) {
         // Try to read backend error (e.g., 400 validations, 401 invalid credentials)
@@ -148,7 +215,7 @@ const useAuth = () => {
           icon: "success",
           title: "Login successful!",
           showConfirmButton: false,
-          timer: 1500,
+          timer: 1200,
         });
 
         navigate("/");
@@ -169,11 +236,17 @@ const useAuth = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    try {
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      // Limpieza agresiva para evitar rebotes por restos
+      localStorage.clear();
+    } catch {}
+    // Intento de limpiar cookie de token si algún flujo la usa
+    try { document.cookie = "authToken=; Max-Age=0; path=/;"; } catch {}
     dispatch({ type: actions.LOGOUT });
-    navigate("/login");
+    navigate("/", { replace: true });
   };
 
   const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));

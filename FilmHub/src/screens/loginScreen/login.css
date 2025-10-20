@@ -98,6 +98,33 @@ h2 {
   min-height: 44px; /* mejora accesibilidad táctil */
 }
 
+.login-form button[disabled] {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: -2px;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.slow-note {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
 /* Efecto al pasar el mouse sobre el botón de inicio de sesión */
 .login-form button[type="submit"]:hover {
   filter: brightness(1.1);

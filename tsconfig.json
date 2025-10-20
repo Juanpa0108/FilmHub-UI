@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "DOM"
-    ],
+    "lib": ["ES2020", "DOM"],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": false,
     "skipLibCheck": true,
@@ -15,11 +12,16 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {},
-    "types": ["vite/client"]
+    "typeRoots": [
+      "./FilmHub/src/types",
+      "./node_modules/@types"
+    ],
+    
   },
   "include": [
-    "src",
-    "src/types",  
+    "FilmHub/src",
+    "FilmHub/src/types",
+    "FilmHub/src/vite-env.d.ts",
     "vite.config.*",
     "vitest.config.*",
     "eslint.config.*"
