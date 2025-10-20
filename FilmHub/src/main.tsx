@@ -13,6 +13,7 @@ import CategoriesScreen from "./screens/categoriesScreen/categoriesScreen";
 import MyReviewsScreen from "./screens/myReviewsScreen/myReviewsScreen";
 import PremieresScreen from "./screens/premieresScreen/PremieresScreen";
 import Profile from "./screens/profileScreen/profileScreen";
+import PlayerScreen from "./screens/PlayerScreen/player";
 import Help from "./screens/helpScreen/help";
 
 
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/movie/:id" element={<MovieDetail />} /> 
           <Route path="/profile" element={<Profile />} /> 
           <Route path="/help" element={<Help />} />
+          <Route path="/player/:id" element={<PlayerScreen />} />
         </Routes>
 
         {/* Footer global */}

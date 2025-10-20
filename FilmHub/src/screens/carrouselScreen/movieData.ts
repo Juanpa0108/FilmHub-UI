@@ -11,7 +11,8 @@ export const moviesData = [
     titleImage: "/movie/movie-website-landing-page-images/the-little-mermaid-title.png",
     backgroundImage: "bg-little-mermaid.jpg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-little-mermaid.jpeg",
-    alt: "The Little Mermaid"
+    alt: "The Little Mermaid",
+    videoUrl: "https://www.youtube.com/watch?v=kpGo2_d3oYE&list=RDkpGo2_d3oYE&start_radio=1"
   },
   {
     id: "65",
@@ -24,7 +25,8 @@ export const moviesData = [
     titleImage: "/movie/movie-website-landing-page-images/the-65-title.png",
     backgroundImage: "bg-65.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/65.jpg",
-    alt: "65"
+    alt: "65",
+    videoUrl: "https://www.youtube.com/watch?v=bHXejJq5vr0"
   },
   {
     id: "the-covenant",
@@ -37,7 +39,8 @@ export const moviesData = [
     titleImage: "/movie/movie-website-landing-page-images/the-covenant-title.png",
     backgroundImage: "bg-the-covenant.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-covenant.jpg",
-    alt: "The Covenant"
+    alt: "The Covenant",
+    videoUrl: "https://www.youtube.com/watch?v=PEiMg5RCDgk"
   },
   {
     id: "the-black-demon",
@@ -50,7 +53,8 @@ export const moviesData = [
     titleImage: "/movie/movie-website-landing-page-images/the-black-demon-title.png",
     backgroundImage: "bg-the-black-demon.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-black-demon.jpg",
-    alt: "The Black Demon"
+    alt: "The Black Demon",
+    videoUrl: "https://www.youtube.com/watch?v=z1xJAyVKAPY"
   },
   {
     id: "the-tank",
@@ -63,8 +67,7 @@ export const moviesData = [
     titleImage: "/movie/movie-website-landing-page-images/the-tank-title.png",
     backgroundImage: "bg-the-tank.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-tank.jpeg",
-    alt: "The Tank"
+    alt: "The Tank",
+    videoUrl: "https://www.youtube.com/watch?v=23GmhsmrCIo"
   },
-  
-  
 ];
