@@ -106,7 +106,7 @@ const Profile: React.FC = () => {
                   <p><strong>Name:</strong> {user.firstName} {user.lastName || ""}</p>
                   <p><strong>Age:</strong> {user.age ?? "-"}</p>
                   <p><strong>Email:</strong> {user.email}</p>
-                  <button className="btn" type="button" onClick={() => setEditMode(true)}>Change data</button>
+                  <button className="btn" type="button" onClick={() => setEditMode(true)}>Change Data</button>
                 </div>
               ) : (
                 <form onSubmit={onSubmit} className="profile-form">
@@ -122,13 +122,13 @@ const Profile: React.FC = () => {
                     Age
                     <input name="age" value={String(form.age ?? "")} onChange={onChange} placeholder="Age" inputMode="numeric" />
                   </label>
-                  <label>
+                  <label className="col-span-2">
                     Email
                     <input name="email" type="email" value={form.email} onChange={onChange} placeholder="Email" />
                   </label>
                   <div className="profile-actions">
                     <button className="btn" type="button" onClick={() => { setEditMode(false); setForm({ firstName: user.firstName||"", lastName: user.lastName||"", age: user.age??"", email: user.email||"" }); }}>Cancel</button>
-                    <button className="btn" type="submit" disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
+                    <button className="btn" type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button>
                   </div>
                 </form>
               )}
@@ -145,17 +145,17 @@ const Profile: React.FC = () => {
               <form onSubmit={onSubmitPwd} className="profile-form single">
                 <label>
                   Current password
-                  <input name="currentPassword" type="password" value={pwd.currentPassword} onChange={onChangePwd} placeholder="Current password" />
+                  <input name="currentPassword" type="password" value={pwd.currentPassword} onChange={onChangePwd} placeholder="" />
                 </label>
                 <label>
                   New password
-                  <input name="newPassword" type="password" value={pwd.newPassword} onChange={onChangePwd} placeholder="New password" />
+                  <input name="newPassword" type="password" value={pwd.newPassword} onChange={onChangePwd} placeholder="" />
                 </label>
                 <label>
                   Confirm new password
-                  <input name="confirmNewPassword" type="password" value={pwd.confirmNewPassword} onChange={onChangePwd} placeholder="Confirm new password" />
+                  <input name="confirmNewPassword" type="password" value={pwd.confirmNewPassword} onChange={onChangePwd} placeholder="" />
                 </label>
-                <button className="btn" type="submit">Change password</button>
+                <button className="btn" type="submit">Change Password</button>
               </form>
             </div>
           </div>

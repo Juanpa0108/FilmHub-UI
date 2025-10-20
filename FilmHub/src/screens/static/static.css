@@ -1,0 +1,13 @@
+.static-page{max-width:900px;margin:88px auto 40px;padding:0 16px;color:var(--text)}
+.static-page h1{color:var(--brand);font-weight:700;margin-bottom:12px}
+.static-page p{color:var(--text-muted);line-height:1.6}
+.static-page ul{padding-left:18px}
+.static-page li{margin:6px 0;color:var(--text-muted)}
+
+.static-header{max-width:900px;margin:70px auto 10px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.static-logo img{width:42px;height:auto;display:block}
+
+/* Minimal button styles for static pages */
+.static-header .btn{background: linear-gradient(90deg, var(--brand), var(--brand)); color:#fff; border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:600}
+.static-header .btn-back{background: transparent; border:1px solid rgba(255,255,255,0.15); color: var(--text)}
+.static-header .btn-back:hover{background: rgba(255,255,255,0.06)}
