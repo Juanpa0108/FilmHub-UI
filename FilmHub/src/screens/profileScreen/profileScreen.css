@@ -104,14 +104,17 @@ body {
     color: var(--text-muted);
 }
 .profile-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.profile-form label { display: flex; flex-direction: column; gap: 6px; color: var(--text); font-size: 13px; text-align: center; }
-.profile-form input { background: var(--bg); color: var(--text); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 11px 12px; text-align: center; }
+.profile-form label { display: flex; flex-direction: column; gap: 6px; color: var(--text); font-size: 13px; text-align: left; min-width: 0; }
+.profile-form input { background: var(--bg); color: var(--text); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 11px 12px; text-align: left; width: 100%; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; }
 .profile-form input::placeholder { color: var(--text-muted); }
 .profile-form .btn { grid-column: 1 / -1; justify-self: center; }
 .profile-form.single { grid-template-columns: 1fr; }
 .profile-readonly { text-align: center; }
 .profile-readonly p { margin: 6px 0; }
 .profile-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: center; }
+
+/* Span utility for full-width fields inside the grid */
+.profile-form .col-span-2 { grid-column: 1 / -1; }
 
 .profile-card-content p {
     margin: 6px 0;
@@ -135,8 +138,14 @@ body {
     background: linear-gradient(90deg, var(--brand), var(--brand));
     color: white;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    min-height: 40px;
 }
 
 .btn:hover {
