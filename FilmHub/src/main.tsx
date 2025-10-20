@@ -35,9 +35,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/categories" element={<CategoriesScreen />} />
           <Route path="/my-reviews" element={<MyReviewsScreen />} />
           <Route path="/premieres" element={<PremieresScreen />} />
+          <Route path="/player/:id" element={<PlayerScreen />} />
           <Route path="/movie/:id" element={<MovieDetail />} /> 
           <Route path="/profile" element={<Profile />} /> 
           <Route path="/help" element={<Help />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Routes>
 
         {/* Footer global */}
