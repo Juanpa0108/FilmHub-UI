@@ -24,9 +24,9 @@
     height: 80vh;        /* altura ideal relativa al viewport */
     max-height: 900px;   /* nunca más de 900px */
     min-width: 100%;
-        padding: 16px; /* alinear contenido interno con la grilla y dar respiro */
-    margin: 0;
-    padding: 0;
+    padding: 0 24px; /* alinear contenido interno con la grilla */
+    margin: 0 auto;
+    max-width: var(--container-max);
     display: flex;
     justify-content: left; /* Centrar contenido horizontalmente */
     align-items: center; /* Centrar contenido verticalmente */
@@ -35,7 +35,6 @@
     background-repeat: no-repeat !important;
     overflow: hidden;
     box-sizing: border-box;
-    transition: 0.5s;
     z-index: 1;
 }
 
@@ -52,22 +51,26 @@
     z-index: 1;
 }
 .carrousel-screen .content {
-    position: relative;
+    position: absolute;
     z-index: 2; /* Por encima del overlay */
-    max-width: 550px;
+    max-width: min(620px, 48vw);
     padding: 0;
     text-align: left; /* evitar centrado raro en pantallas estrechas */
-    display: none;
+    display: block;           /* mantiene el layout estable */
+    opacity: 0;               /* oculto por opacidad */
     visibility: hidden;
-    transform: scale(0);
-    transition: 0.5s;
+    pointer-events: none;
+    transition: opacity .35s ease, visibility 0s linear .35s;
+    left: clamp(24px, 5vw, 80px);
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .carrousel-screen .content.active {
-    display: block !important;
-    visibility: visible !important;
-    transform: scale(1) !important;
-    transition: 0.5s;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity .35s ease;
 }
 
 .carrousel-screen .movie-title-image {
@@ -150,10 +153,10 @@
 
 .carrousel-screen .banner .carousel-box {
     position: absolute; /* anchor inside banner, not viewport */
-    right: 32px; /* alinear con padding de secciones */
+    right: clamp(16px, 4vw, 64px); /* alinear responsive con los márgenes */
     top: 50%;
     transform: translateY(-50%);
-    min-width: 550px;
+    width: clamp(300px, 42vw, 520px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -167,7 +170,7 @@
 
 .carrousel-screen .carousel {
     position: relative;
-    height: 550px;
+    height: clamp(420px, 52vh, 560px);
     perspective: 1500px;
 }
 
@@ -179,7 +182,7 @@
 .carrousel-screen .carousel .carousel-item img {
     max-width: 235px;
     border-radius: 10px;
-    transform: translateX(8px) translateY(-50px);
+    transform: translateX(8px) translateY(-28px);
     object-fit: cover;
     object-position: center;
 }
@@ -191,18 +194,27 @@
 @media (max-width: 1200px) {
     .carrousel-screen .banner .carousel-box {
         right: 16px;
-        min-width: 420px;
+        width: clamp(300px, 38vw, 420px);
     }
 }
 
 @media (max-width: 768px) {
+    /* En móvil, el contenido aparece arriba y el carrusel debajo */
+    .carrousel-screen .content {
+        left: 0;
+        right: 0;
+        top: auto;
+        transform: none;
+        margin-top: 8px;
+        max-width: 92vw;
+    }
     .carrousel-screen .banner .carousel-box {
         position: relative;
         right: auto;
         top: auto;
         transform: none;
         margin-top: 20px;
-        min-width: 300px;
+        width: min(92vw, 360px);
     }
     
     .carrousel-screen .banner {

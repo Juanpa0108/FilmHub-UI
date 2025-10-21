@@ -4,6 +4,8 @@
   --text: #e8e8ea;      /* texto claro */
   --muted: #a6a6b0;     /* texto secundario */
   --brand: #f88f0c;     /* secondary (brand) exact */
+  /* Ancho máximo fluido de la app: crece con la ventana pero limita en pantallas enormes */
+  --container-max: clamp(1100px, 92vw, 1440px);
 }
 
 html, body, #root {
@@ -30,7 +32,7 @@ button {
   cursor: pointer;
 }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 16px; }
 
 .footer {
   background: rgba(0, 0, 0, 0.5);
@@ -45,7 +47,7 @@ button {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr 1fr;
   gap: 16px;
-  max-width: 1000px;
+  max-width: var(--container-max);
   margin: 0 auto 12px;
   align-items: start;
 }
@@ -86,7 +88,7 @@ button {
 }
 
 .footer-content{
-  max-width: 1000px;
+  max-width: var(--container-max);
   margin: 0 auto 8px;
   display: flex;
   flex-wrap: wrap;

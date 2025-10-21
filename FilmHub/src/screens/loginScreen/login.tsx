@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import WavesBackground from "../../components/waves/waves";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 import { apiPath } from "../../config/env";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
 
 type FormData = {
   email: string;
@@ -83,10 +84,17 @@ const Login: React.FC = () => {
     }
   };
 
- return (
+  return (
     <div className="login-wrapper">
       <WavesBackground />
-      <div className="login-container" role="main">
+      <div className="login-grid">
+        <section className="login-brand">
+          <Link to="/" aria-label="Go to home" className="brand-link">
+            <BrandLogo className="brand-logo-xl" />
+          </Link>
+          <h2 className="brand-title">Become a Cinephile</h2>
+        </section>
+        <div className="login-container" role="main">
         <h2>Welcome!</h2>
 
         <div id="id-register-link">
@@ -143,6 +151,7 @@ const Login: React.FC = () => {
             <button className="icon-btn github" type="button" aria-label="Sign in with GitHub"><FaGithub /></button>
             <button className="icon-btn twitter" type="button" aria-label="Sign in with Twitter/X"><FaTwitter /></button>
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import WavesBackground from "../../components/waves/waves";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../API/authContext";
 import Swal from "sweetalert2";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const Profile: React.FC = () => {
   const { state, updateProfile, changePassword, fetchCurrentUser } = useAuthContext() as any;
@@ -62,6 +63,30 @@ const Profile: React.FC = () => {
   };
   const onSubmitPwd: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    // Validaciones básicas del lado del cliente
+    if (!pwd.currentPassword || !pwd.newPassword || !pwd.confirmNewPassword) {
+      await Swal.fire({ icon: "warning", title: "Missing fields", text: "Please fill out all password fields." });
+      return;
+    }
+    if (pwd.newPassword.length < 8) {
+      await Swal.fire({ icon: "warning", title: "Weak password", text: "New password must be at least 8 characters." });
+      return;
+    }
+    if (pwd.newPassword !== pwd.confirmNewPassword) {
+      await Swal.fire({ icon: "warning", title: "Passwords do not match", text: "Confirm that both new passwords match." });
+      return;
+    }
+
+    const result = await Swal.fire({
+      icon: "question",
+      title: "Change password?",
+      text: "Are you sure you want to update your password?",
+      showCancelButton: true,
+      confirmButtonText: "Yes, change it",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
+
     await changePassword(pwd);
     setPwd({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
   };
@@ -145,15 +170,15 @@ const Profile: React.FC = () => {
               <form onSubmit={onSubmitPwd} className="profile-form single">
                 <label>
                   Current password
-                  <input name="currentPassword" type="password" value={pwd.currentPassword} onChange={onChangePwd} placeholder="" />
+                  <PasswordInput name="currentPassword" value={pwd.currentPassword} onChange={onChangePwd} placeholder="" autoComplete="current-password" />
                 </label>
                 <label>
                   New password
-                  <input name="newPassword" type="password" value={pwd.newPassword} onChange={onChangePwd} placeholder="" />
+                  <PasswordInput name="newPassword" value={pwd.newPassword} onChange={onChangePwd} placeholder="" autoComplete="new-password" />
                 </label>
                 <label>
                   Confirm new password
-                  <input name="confirmNewPassword" type="password" value={pwd.confirmNewPassword} onChange={onChangePwd} placeholder="" />
+                  <PasswordInput name="confirmNewPassword" value={pwd.confirmNewPassword} onChange={onChangePwd} placeholder="" autoComplete="new-password" />
                 </label>
                 <button className="btn" type="submit">Change Password</button>
               </form>
