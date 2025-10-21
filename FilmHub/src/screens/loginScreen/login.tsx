@@ -6,6 +6,8 @@ import useAuth from "../../API/auth.js";
 import { Link, useNavigate } from "react-router-dom";
 import WavesBackground from "../../components/waves/waves";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
+import { apiPath } from "../../config/env";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
 
 type FormData = {
   email: string;
@@ -16,14 +18,37 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSlow, setIsSlow] = useState(false);
 
-  // Si ya hay sesión activa, redirigir silenciosamente al home
+  // Si parece haber sesión, verificar con el backend antes de redirigir
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    const user = stored ? (JSON.parse(stored) as { expirationDate?: number }) : null;
-    if (user?.expirationDate && user.expirationDate > Date.now()) {
-      navigate("/", { replace: true });
-    }
+    let cancelled = false;
+    const check = async () => {
+      const stored = localStorage.getItem("user");
+      const token = localStorage.getItem("accessToken");
+      const user = stored ? (JSON.parse(stored) as { expirationDate?: number }) : null;
+      const looksValid = !!token && !!user?.expirationDate && user.expirationDate > Date.now();
+      if (!looksValid) return;
+      try {
+        const res = await fetch(apiPath("/api/auth/verify"), {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
+        });
+        if (!cancelled && res.ok) {
+          navigate("/", { replace: true });
+        }
+      } catch (_) {
+        // Ignorar; no redirigir si falla
+      }
+    };
+    check();
+    // Dispara un ping de calentamiento al cargar la pantalla de login
+    const controller = new AbortController();
+    fetch(apiPath("/health"), { signal: controller.signal, cache: "no-store" }).catch(() => {});
+    const timeout = setTimeout(() => controller.abort(), 2500);
+    return () => { cancelled = true; clearTimeout(timeout); controller.abort(); };
   }, [navigate]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -47,13 +72,29 @@ const Login: React.FC = () => {
       return;
     }
 
-    await login(formData); // si login espera otro shape, tipéalo en useAuth
+    try {
+      setIsSubmitting(true);
+      // Si el servidor está frío, muestra un mensaje sutil después de 2s
+      const slowTimer = setTimeout(() => setIsSlow(true), 2000);
+      await login(formData); // si login espera otro shape, tipéalo en useAuth
+      clearTimeout(slowTimer);
+    } finally {
+      setIsSubmitting(false);
+      setIsSlow(false);
+    }
   };
 
- return (
+  return (
     <div className="login-wrapper">
       <WavesBackground />
-      <div className="login-container" role="main">
+      <div className="login-grid">
+        <section className="login-brand">
+          <Link to="/" aria-label="Go to home" className="brand-link">
+            <BrandLogo className="brand-logo-xl" />
+          </Link>
+          <h2 className="brand-title">Become a Cinephile</h2>
+        </section>
+        <div className="login-container" role="main">
         <h2>Welcome!</h2>
 
         <div id="id-register-link">
@@ -82,7 +123,21 @@ const Login: React.FC = () => {
             required
             autoComplete="current-password"
           />
-          <button type="submit">Sign in</button>
+          <button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <span className="btn-spinner" aria-hidden="true" />
+                {isSlow ? " Waking server…" : " Signing in…"}
+              </>
+            ) : (
+              "Sign in"
+            )}
+          </button>
+          {isSubmitting && isSlow && (
+            <p className="slow-note" role="status">
+              Waking the server for the first time can take a few seconds. Thanks for your patience.
+            </p>
+          )}
         </form>
 
         <div id="recovery-link">
@@ -96,6 +151,7 @@ const Login: React.FC = () => {
             <button className="icon-btn github" type="button" aria-label="Sign in with GitHub"><FaGithub /></button>
             <button className="icon-btn twitter" type="button" aria-label="Sign in with Twitter/X"><FaTwitter /></button>
           </div>
+        </div>
         </div>
       </div>
     </div>

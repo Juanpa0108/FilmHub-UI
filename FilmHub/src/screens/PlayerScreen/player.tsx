@@ -54,7 +54,7 @@ const PlayerScreen: React.FC = () => {
         {/* Embedded YouTube video */}
         <ReactPlayer
           className="react-player"
-          src={movie.videoUrl} //Use  video URL from REACT PLAYER LIBRARY
+          url={movie.videoUrl}
           controls
           playing
           width="100%"

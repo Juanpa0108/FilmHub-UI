@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaGoogle, FaGithub, FaTwitter } from "react-icons/fa";
 import "./register.css";
 import useAuth from "../../API/auth.js";
@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AnimatedBackground from "../../components/particles/particles";
 import BrandLogo from "../../components/BrandLogo/BrandLogo"; 
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
+import { apiPath } from "../../config/env";
 
 type FormData = {
   username: string;
@@ -31,6 +32,29 @@ const Register: React.FC = () => {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // Evitar rebote: si parece haber sesión, verificar con backend
+  useEffect(() => {
+    let cancelled = false;
+    const check = async () => {
+      const token = localStorage.getItem("accessToken");
+      const stored = localStorage.getItem("user");
+      const user = stored ? JSON.parse(stored) : null;
+      const looksValid = !!token && !!user?.expirationDate && user.expirationDate > Date.now();
+      if (!looksValid) return;
+      try {
+        const res = await fetch(apiPath("/api/auth/verify"), {
+          method: "GET",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          credentials: "include",
+        });
+        if (!cancelled && res.ok) {
+          navigate("/", { replace: true });
+        }
+      } catch {}
+    };
+    check();
+    return () => { cancelled = true; };
+  }, [navigate]);
   // Estado para requisitos y progreso
   const [requirements, setRequirements] = useState({
     username: false,

@@ -28,18 +28,43 @@ body {
    ============================= */
 .login-wrapper {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: block;
   min-height: 100svh; 
   padding: var(--space);
   overflow: hidden;
 }
 
+/* Two-column layout to mirror register screen */
+.login-grid{
+  display: grid;
+  /* Tres columnas: lados flexibles y el formulario centrado en la columna del medio */
+  grid-template-columns: 1fr minmax(360px, 420px) 1fr;
+  align-items: center;
+  gap: clamp(16px, 6vw, 56px);
+  max-width: clamp(1024px, 92vw, 1400px);
+  margin: 0 auto;
+  padding-top: 40px; /* despeje de navbar */
+  min-height: calc(100svh - 80px);
+  align-content: center; /* centra verticalmente el contenido de la grilla */
+}
+
+.login-brand{ color: var(--text); text-align: left; position: relative; z-index: 1; grid-column: 1; }
+.brand-logo-xl{ width: clamp(140px, 22vw, 220px); height: auto; display: block; margin-bottom: 12px; }
+.brand-title{ font-size: clamp(20px, 3.5vw, 28px); margin: 0 0 6px; }
+.subtitle{ color: var(--muted); font-size: clamp(13px, 1.6vw, 15px); margin: 0; }
+
+.brand-link { display: inline-flex; align-items: center; justify-content: center; }
+.brand-logo { width: 44px; height: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); transition: transform .2s ease; }
+.brand-link:hover .brand-logo { transform: scale(1.06); }
+
+.form-brand { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+
 /* =============================
    Caja del formulario de login
    ============================= */
 .login-container {
-  width: min(350px, 100%); /* ahora fluido */
+  grid-column: 2; /* fija el formulario en la columna central */
+  width: min(420px, 100%);
   padding: 25px;
   background: var(--panel);
   backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
@@ -96,6 +121,33 @@ h2 {
   cursor: pointer;
   transition: transform .15s ease, filter .15s ease;
   min-height: 44px; /* mejora accesibilidad táctil */
+}
+
+.login-form button[disabled] {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: -2px;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.slow-note {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.85;
 }
 
 /* Efecto al pasar el mouse sobre el botón de inicio de sesión */
@@ -211,6 +263,7 @@ h2 {
   inset: 0;
   z-index: 0;
 }
+.login-grid,
 .login-container,
 #id-register-link,
 #recovery-link,
@@ -225,8 +278,11 @@ h2 {
 
 /* Teléfonos pequeños */
 @media (max-width: 480px) {
+  .login-grid{ grid-template-columns: 1fr; padding-top: 16px; }
+  .login-brand{ text-align: center; margin-bottom: 8px; }
+  .brand-logo-xl{ margin: 0 auto 8px; }
   .login-container {
-    width: 100%;
+    width: min(480px, 100%);
     padding: 18px;
     border-radius: 10px;
   }
@@ -240,6 +296,13 @@ h2 {
   .login-form button {
     font-size: 15px;
   }
+}
+
+/* Tablets y móviles grandes */
+@media (max-width: 768px) {
+  .login-grid{ grid-template-columns: 1fr; padding-top: 20px; }
+  .login-brand{ text-align: center; margin-bottom: 8px; }
+  .brand-logo-xl{ margin: 0 auto 8px; }
 }
 
 /* Pantallas muy pequeñas (<360px) */

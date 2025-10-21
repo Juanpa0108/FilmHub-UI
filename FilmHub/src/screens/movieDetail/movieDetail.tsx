@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import { moviesData } from "../carrouselScreen/movieData";
 import { Movie } from "../../types/movie";
 const logo = "/logo.png";
-<img src="/logo.png" alt="Logo" />
 import "./movieDetail.css";
 
 type UserComment = {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../API/auth";
+import { useAuthContext } from "../../API/authContext";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
@@ -10,7 +10,8 @@ import "./PremieresScreen.css"; // 👈 nuevo archivo CSS
 
 const PremieresScreen: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const { user } = useAuth();
+  const { state } = useAuthContext() as any;
+  const user = state?.user;
 
   return (
     <div className="app-container">
