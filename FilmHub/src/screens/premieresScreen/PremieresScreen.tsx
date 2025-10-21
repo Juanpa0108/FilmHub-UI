@@ -4,7 +4,9 @@ import useAuth from "../../API/auth";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
+import { moviesData } from "../carrouselScreen/movieData";
 import "../../screens/carrouselScreen/carrouselScreen.css";
+import "./PremieresScreen.css"; // 👈 nuevo archivo CSS
 
 const PremieresScreen: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -12,6 +14,7 @@ const PremieresScreen: React.FC = () => {
 
   return (
     <div className="app-container">
+      {/* NAVBAR */}
       <div className="navbar">
         <div className="brand">
           <Link to="/">
@@ -36,7 +39,7 @@ const PremieresScreen: React.FC = () => {
               <div className="dropdown-menu">
                 <Link to="/categories">Categories</Link>
                 <Link to="/my-reviews">My Reviews</Link>
-                <Link to="/premieres">Premieres</Link>
+                <Link to="/premieres">Watch Now!</Link>
                 <Link to="/coming-soon">Coming Soon</Link>
               </div>
             )}
@@ -55,11 +58,29 @@ const PremieresScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="movie-carousel-section">
-        <h1 style={{ color: "white", textAlign: "center" }}>Categories</h1>
-        <p style={{ color: "white", textAlign: "center", opacity: 0.8 }}>
-          Aquí puedes explorar por géneros como acción, comedia, drama, y más.
-        </p>
+      {/* MAIN CONTENT */}
+      <div className="movie-grid-container">
+        <h1 className="section-title">Watch Now</h1>
+
+        <div className="movie-grid">
+          {moviesData.map((movie) => (
+            <Link
+              key={movie.id}
+              to={`/player/${movie.id}`}
+              className="movie-card"
+            >
+              <img
+                src={movie.thumbnailImage}
+                alt={movie.title}
+                className="movie-thumbnail"
+              />
+              <div className="movie-info">
+                <h3>{movie.title}</h3>
+                <p>{movie.genre}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

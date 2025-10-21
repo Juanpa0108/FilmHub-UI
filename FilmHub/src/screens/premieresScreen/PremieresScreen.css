@@ -1,0 +1,53 @@
+.movie-grid-container {
+    padding: 40px;
+    background-color: #0b0b0b;
+    color: white;
+    min-height: 100vh;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+/* GRID DE PELÍCULAS */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    justify-items: center;
+}
+
+.movie-card {
+    text-decoration: none;
+    color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.movie-thumbnail {
+    width: 180px;
+    height: 270px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.movie-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.movie-info h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.movie-info p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
