@@ -144,96 +144,110 @@ const useAuth = () => {
   };
 
   const login = async (userInfo) => {
+  try {
+    // Crear AbortController para timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
+
+    let response;
     try {
-      // Calienta el servidor antes de intentar loguear
-      warmUpServer();
-      // Mensaje sutil por si el servidor está frío (sin UI visible aquí)
-      let slowTimer = setTimeout(() => {
-        try { console.info("Despertando servidor…") } catch {}
-      }, 1500);
-      let response;
+      response = await fetch("http://localhost:4000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        mode: "cors",
+        credentials: "include",
+        body: JSON.stringify(userInfo),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+    } catch (err) {
+      clearTimeout(timeoutId);
+
+      console.log (err.message)
+      // Solo reintenta si fue un error de red, no de timeout
+      if (err.name === 'AbortError') {
+        throw new Error("El servidor tardó demasiado en responder. Intenta nuevamente.");
+      }
+      
+      // Reintento rápido sin warmUpServer (esto estaba causando demora)
+      const retryController = new AbortController();
+      const retryTimeoutId = setTimeout(() => retryController.abort(), 10000);
+      
       try {
-        response = await fetchWithTimeout(apiPath(`/api/auth/login`), {
+        response = await fetch(apiPath("/api/auth/login"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           mode: "cors",
           credentials: "include",
           body: JSON.stringify(userInfo),
-        }, 15000);
-      } catch (err) {
-        // Un intento de reintento rápido si la 1a vez expiró/abortó
-        try {
-          await warmUpServer();
-          response = await fetchWithTimeout(apiPath(`/api/auth/login`), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            mode: "cors",
-            credentials: "include",
-            body: JSON.stringify(userInfo),
-          }, 15000);
-        } catch (e2) {
-          clearTimeout(slowTimer);
-          throw new Error("El servidor tardó demasiado en responder. Intenta nuevamente.");
-        }
-      }
-      clearTimeout(slowTimer);
-
-      if (!response.ok) {
-        // Try to read backend error (e.g., 400 validations, 401 invalid credentials)
-        try {
-          const err = await response.json();
-          throw new Error(err?.error || "Error en la autenticación");
-        } catch (_) {
-          throw new Error("Error en la autenticación");
-        }
-      }
-
-      const data = await response.json();
-      // Support either {access, refresh, user} or {token, user}
-      const accessToken = data.access || data.token;
-      const refreshTokenValue = data.refresh; // may be undefined on this API
-      const apiUser = data.user || {};
-      if (accessToken && apiUser) {
-        const user = {
-          id: apiUser.id,
-          email: apiUser.email,
-          username: apiUser.username || apiUser.firstName || "",
-          firstName: apiUser.firstName,
-          lastName: apiUser.lastName,
-          expirationDate: setExpirationDate(2700),
-        };
-
-        dispatch({ type: actions.SET_USER, user, accessToken });
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("accessToken", accessToken);
-        if (refreshTokenValue) {
-          localStorage.setItem("refreshToken", refreshTokenValue);
-        }
-
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Login successful!",
-          showConfirmButton: false,
-          timer: 1200,
+          signal: retryController.signal,
         });
-
-        navigate("/");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Login failed",
-          text: "Invalid credentials, please try again!",
-        });
+        clearTimeout(retryTimeoutId);
+      } catch (e2) {
+        clearTimeout(retryTimeoutId);
+        throw new Error("No se pudo conectar con el servidor. Verifica tu conexión.");
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message || "There was a problem logging in, try again!",
-      });
     }
-  };
+
+    // Validar respuesta
+    if (!response.ok) {
+      try {
+        const err = await response.json();
+        throw new Error(err?.error || "Credenciales inválidas");
+      } catch (parseError) {
+        throw new Error("Error en la autenticación");
+      }
+    }
+
+    const data = await response.json();
+    const accessToken = data.access || data.token;
+    const refreshTokenValue = data.refresh;
+    const apiUser = data.user || {};
+
+    if (!accessToken || !apiUser) {
+      throw new Error("Respuesta inválida del servidor");
+    }
+
+    // Guardar datos del usuario
+    const user = {
+      id: apiUser.id,
+      email: apiUser.email,
+      username: apiUser.username || apiUser.firstName || "",
+      firstName: apiUser.firstName,
+      lastName: apiUser.lastName,
+      expirationDate: setExpirationDate(2700),
+    };
+
+    // Guardar en localStorage y dispatch en paralelo para mayor velocidad
+    const storagePromises = [
+      localStorage.setItem("user", JSON.stringify(user)),
+      localStorage.setItem("accessToken", accessToken),
+    ];
+    
+    if (refreshTokenValue) {
+      storagePromises.push(localStorage.setItem("refreshToken", refreshTokenValue));
+    }
+
+    dispatch({ type: actions.SET_USER, user, accessToken });
+
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "¡Login exitoso!",
+      showConfirmButton: false,
+      timer: 1200,
+    });
+
+    navigate("/");
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "Hubo un problema al iniciar sesión, intenta de nuevo",
+    });
+  }
+};
 
   const logout = () => {
     try {
