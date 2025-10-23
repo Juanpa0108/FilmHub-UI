@@ -20,6 +20,7 @@ const Principal: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [authTick, setAuthTick] = useState(0); // fuerza re-render en cambios globales de auth
   const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   // Cerrar el menú de usuario con clic fuera o con tecla ESC
@@ -43,6 +44,13 @@ const Principal: React.FC = () => {
   }, [userMenuOpen]);
   const { state } = useAuthContext();
   const user = state?.user;
+
+  // Escucha actualizaciones globales de autenticación por si algún consumidor no re-renderiza a tiempo
+  useEffect(() => {
+    const handler = () => setAuthTick((v) => v + 1);
+    window.addEventListener("auth:changed", handler as EventListener);
+    return () => window.removeEventListener("auth:changed", handler as EventListener);
+  }, []);
 
   const peliculasFiltradas = (moviesData || []).filter(
     (peli) =>

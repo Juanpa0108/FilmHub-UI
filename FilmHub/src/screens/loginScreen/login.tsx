@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaGoogle, FaGithub, FaTwitter } from "react-icons/fa";
 import "./login.css";
 import Swal from "sweetalert2";
-import useAuth from "../../API/auth.js";
+import useAuth from "../../API/auth";
 import { Link, useNavigate } from "react-router-dom";
 import WavesBackground from "../../components/waves/waves";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";

@@ -16,115 +16,170 @@ html, body {
 
 body {
   margin: 0;
-  font-family: "Arial", sans-serif; /* Fuente general */
+  font-family: "Arial", sans-serif;
   font-size: var(--fs-body);
-  background: var(--bg); /* negro intenso */
+  background: var(--bg);
   color: white;
 }
 
 /* =============================
    Contenedor principal del login
-   (ajustado para móviles)
    ============================= */
 .login-wrapper {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100svh; 
   padding: var(--space);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* Two-column layout to mirror register screen */
-.login-grid{
+/* Layout grid responsive */
+.login-grid {
   display: grid;
-  /* Tres columnas: lados flexibles y el formulario centrado en la columna del medio */
-  grid-template-columns: 1fr minmax(360px, 420px) 1fr;
+  grid-template-columns: 1fr minmax(min(100%, 420px), 420px) 1fr;
   align-items: center;
-  gap: clamp(16px, 6vw, 56px);
-  max-width: clamp(1024px, 92vw, 1400px);
+  gap: clamp(20px, 6vw, 56px);
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding-top: 40px; /* despeje de navbar */
-  min-height: calc(100svh - 80px);
-  align-content: center; /* centra verticalmente el contenido de la grilla */
+  padding: 60px 0 40px;
 }
 
-.login-brand{ color: var(--text); text-align: left; position: relative; z-index: 1; grid-column: 1; }
-.brand-logo-xl{ width: clamp(140px, 22vw, 220px); height: auto; display: block; margin-bottom: 12px; }
-.brand-title{ font-size: clamp(20px, 3.5vw, 28px); margin: 0 0 6px; }
-.subtitle{ color: var(--muted); font-size: clamp(13px, 1.6vw, 15px); margin: 0; }
+/* Branding section */
+.login-brand { 
+  color: var(--text); 
+  text-align: left; 
+  position: relative; 
+  z-index: 1; 
+  grid-column: 1;
+  padding-right: 20px;
+}
 
-.brand-link { display: inline-flex; align-items: center; justify-content: center; }
-.brand-logo { width: 44px; height: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); transition: transform .2s ease; }
-.brand-link:hover .brand-logo { transform: scale(1.06); }
+.brand-logo-xl { 
+  width: clamp(140px, 22vw, 220px); 
+  height: auto; 
+  display: block; 
+  margin-bottom: 12px;
+}
 
-.form-brand { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+.brand-title { 
+  font-size: clamp(20px, 3.5vw, 28px); 
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.subtitle { 
+  color: var(--muted); 
+  font-size: clamp(13px, 1.6vw, 15px); 
+  margin: 0;
+  line-height: 1.4;
+}
+
+.brand-link { 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center;
+  text-decoration: none;
+}
+
+.brand-logo { 
+  width: 44px; 
+  height: auto; 
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); 
+  transition: transform .2s ease;
+}
+
+.brand-link:hover .brand-logo { 
+  transform: scale(1.06);
+}
+
+.form-brand { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  margin-bottom: 12px;
+}
 
 /* =============================
    Caja del formulario de login
    ============================= */
 .login-container {
-  grid-column: 2; /* fija el formulario en la columna central */
-  width: min(420px, 100%);
-  padding: 25px;
+  grid-column: 2;
+  width: 100%;
+  max-width: 420px;
+  padding: clamp(20px, 5vw, 32px);
   background: var(--panel);
-  backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
-  border-radius: 12px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
-  text-align: center; /* Centrar contenido */
-  color: white; /* Texto en color blanco */
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 1;
 }
 
 /* =============================
-   Estilo del título
+   Título
    ============================= */
 h2 {
-  margin-bottom: 10px;
+  margin: 0 0 clamp(16px, 3vw, 24px);
   font-size: var(--fs-h2);
+  font-weight: 600;
 }
 
 /* =============================
-   Estilo de los inputs del formulario
+   Formulario
    ============================= */
 .login-form {
   display: grid;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 14px;
+  margin-top: 16px;
 }
 
 .login-form input {
   width: 100%;
-  padding: 12px;
-  margin: 4px 0; 
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  border: 1px solid rgba(255,255,255,0.06);
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  font-size: clamp(14px, 1.8vw, 15px);
   color: white;
   outline: none;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.05);
+  transition: all 0.2s ease;
 }
 
-/* Password input toggle es manejado por un componente reusable */
-  
+.login-form input:focus {
+  border-color: var(--brand);
+  background: rgba(255,255,255,0.08);
+}
+
+.login-form input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
 /* =============================
    Botón de inicio de sesión
    ============================= */
 .login-form button[type="submit"] {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 14px 20px;
+  margin-top: 8px;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
-  background: linear-gradient(90deg, var(--brand), var(--brand));
+  font-size: clamp(15px, 2vw, 16px);
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--brand), var(--brand));
   color: white;
   cursor: pointer;
-  transition: transform .15s ease, filter .15s ease;
-  min-height: 44px; /* mejora accesibilidad táctil */
+  transition: all 0.2s ease;
+  min-height: 48px;
 }
 
 .login-form button[disabled] {
-  opacity: 0.8;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -146,177 +201,296 @@ h2 {
 
 .slow-note {
   margin-top: 8px;
-  font-size: 12px;
-  opacity: 0.85;
+  font-size: clamp(11px, 1.5vw, 12px);
+  opacity: 0.75;
+  color: rgba(255,255,255,0.6);
 }
 
-/* Efecto al pasar el mouse sobre el botón de inicio de sesión */
-.login-form button[type="submit"]:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
+.login-form button[type="submit"]:hover:not([disabled]) {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(var(--brand-rgb, 59, 130, 246), 0.4);
+}
+
+.login-form button[type="submit"]:active:not([disabled]) {
+  transform: translateY(0);
 }
 
 /* =============================
-   Estilo del texto "Or sign in with"
+   Redes sociales
    ============================= */
-.social-login p {
-  margin: 15px 0 10px;
-  font-size: 14px;
+.social-login {
+  position: relative;
+  z-index: 1;
 }
 
-/* Contenedor de los botones de redes sociales */
+.social-login p {
+  margin: 20px 0 14px;
+  font-size: clamp(13px, 1.6vw, 14px);
+  color: rgba(255,255,255,0.6);
+}
+
 .social-icons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
-/* Estilos generales de los botones de redes sociales */
 .icon-btn {
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform .15s ease, filter .15s ease;
+  transition: all 0.2s ease;
   height: 48px;
   width: 100%;
 }
 
-/* Estilo para el botón de Google */
 .google {
-  background: #db4437; /* Rojo */
+  background: #db4437;
   color: white;
 }
 
-/* Estilo para el botón de GitHub */
 .github {
-  background: #0f0f14; 
+  background: #0f0f14;
   color: white;
 }
 
-/* Estilo para el botón de Twitter */
 .twitter {
-  background: #1da1f2; /* Azul */
+  background: #1da1f2;
   color: white;
 }
 
-/* Efecto de agrandamiento al pasar el mouse sobre los botones de redes sociales */
 .icon-btn:hover {
   transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
 }
 
 /* =============================
-   Estilo del enlace de registro
+   Enlaces
    ============================= */
-#id-register-link {
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-/* Estilo del enlace de registro cuando no está en hover */
-#id-register-link a {
-  color: var(--brand);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* =============================
-   Estilo del enlace de recuperar contraseña
-   ============================= */
+#id-register-link,
 #recovery-link {
-  margin-top: 15px;   
-  font-size: 14px;
+  margin-top: 16px;
+  font-size: clamp(13px, 1.6vw, 14px);
+  position: relative;
+  z-index: 1;
 }
 
-/* Estilo del enlace de recovery */
+#id-register-link a,
 #recovery-link a {
   color: var(--brand);
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  transition: filter 0.2s ease;
 }
 
-#recovery-link a:hover { 
-  filter: brightness(1.1);
+#id-register-link a:hover,
+#recovery-link a:hover {
+  filter: brightness(1.2);
+  text-decoration: underline;
 }
 
-/* Estilo del enlace de registro cuando el usuario pasa el mouse */
-#id-register-link a:hover {
-  filter: brightness(1.1);
-}
-
-/* Asegurar que visited no caiga al azul por defecto */
 #id-register-link a:visited,
 #recovery-link a:visited {
   color: var(--brand);
 }
 
 /* =============================
-   Ajuste del fondo con WavesBackground
-   (para que quede detrás del contenido)
+   Background waves
    ============================= */
 .login-wrapper > *:first-child {
   position: absolute;
   inset: 0;
   z-index: 0;
-}
-.login-grid,
-.login-container,
-#id-register-link,
-#recovery-link,
-.social-login {
-  position: relative;
-  z-index: 1;
+  pointer-events: none;
 }
 
 /* =============================
-   MEDIA QUERIES (nuevos)
+   MEDIA QUERIES
    ============================= */
 
-/* Teléfonos pequeños */
-@media (max-width: 480px) {
-  .login-grid{ grid-template-columns: 1fr; padding-top: 16px; }
-  .login-brand{ text-align: center; margin-bottom: 8px; }
-  .brand-logo-xl{ margin: 0 auto 8px; }
+/* Tablets y dispositivos medianos (≤ 1024px) */
+@media (max-width: 1024px) {
+  .login-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 0;
+  }
+
+  .login-brand {
+    text-align: center;
+    padding-right: 0;
+    margin-bottom: 16px;
+  }
+
+  .brand-logo-xl {
+    margin: 0 auto 12px;
+  }
+
   .login-container {
-    width: min(480px, 100%);
-    padding: 18px;
+    grid-column: 1;
+    margin: 0 auto;
+  }
+}
+
+/* Tablets pequeñas (≤ 768px) */
+@media (max-width: 768px) {
+  .login-wrapper {
+    padding: 16px;
+  }
+
+  .login-grid {
+    padding: 32px 0;
+    gap: 24px;
+  }
+
+  .login-container {
+    max-width: 100%;
+    padding: 24px 20px;
+  }
+
+  .social-icons {
+    gap: 8px;
+  }
+
+  .icon-btn {
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Móviles (≤ 480px) */
+@media (max-width: 480px) {
+  .login-wrapper {
+    padding: 12px;
+  }
+
+  .login-grid {
+    padding: 24px 0;
+    gap: 20px;
+  }
+
+  .login-container {
+    padding: 20px 16px;
     border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .login-form {
+    gap: 12px;
+  }
+
+  .login-form input {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .login-form button[type="submit"] {
+    padding: 13px 18px;
+    font-size: 15px;
+    min-height: 46px;
   }
 
   .social-icons {
     grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .icon-btn {
+    height: 42px;
+    padding: 10px;
+    font-size: 17px;
+  }
+
+  #id-register-link,
+  #recovery-link {
+    font-size: 13px;
+    margin-top: 14px;
+  }
+}
+
+/* Móviles muy pequeños (≤ 360px) */
+@media (max-width: 360px) {
+  .login-container {
+    padding: 18px 14px;
+  }
+
+  .social-icons {
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
-  .login-form input,
-  .login-form button {
-    font-size: 15px;
+  .icon-btn {
+    height: 44px;
   }
 }
 
-/* Tablets y móviles grandes */
-@media (max-width: 768px) {
-  .login-grid{ grid-template-columns: 1fr; padding-top: 20px; }
-  .login-brand{ text-align: center; margin-bottom: 8px; }
-  .brand-logo-xl{ margin: 0 auto 8px; }
-}
+/* Landscape en móviles */
+@media (max-height: 600px) and (orientation: landscape) {
+  .login-wrapper {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
 
-/* Pantallas muy pequeñas (<360px) */
-@media (max-width: 360px) {
-  .social-icons {
-    grid-template-columns: repeat(2, 1fr);
+  .login-grid {
+    padding: 20px 0;
+    gap: 16px;
+  }
+
+  .login-container {
+    margin: 0 auto;
+  }
+
+  h2 {
+    margin-bottom: 12px;
+  }
+
+  .login-form {
+    gap: 10px;
+  }
+
+  .social-login p {
+    margin: 12px 0 10px;
+  }
+
+  #id-register-link,
+  #recovery-link {
+    margin-top: 12px;
   }
 }
 
-/* Usuarios con reducción de movimiento */
+/* Reducción de movimiento */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation-duration: 0.001ms !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode support (si lo necesitas) */
+@media (prefers-color-scheme: dark) {
+  .login-form input {
+    background: rgba(255,255,255,0.06);
+  }
+  
+  .login-form input:focus {
+    background: rgba(255,255,255,0.1);
   }
 }

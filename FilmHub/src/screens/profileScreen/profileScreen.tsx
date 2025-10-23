@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const Profile: React.FC = () => {
-  const { state, updateProfile, changePassword, fetchCurrentUser } = useAuthContext() as any;
+  const { state, updateProfile, changePassword, fetchCurrentUser, deleteAccount } = useAuthContext() as any;
   const navigate = useNavigate();
   const user = state?.user || {};
   const [form, setForm] = useState({
@@ -26,6 +26,7 @@ const Profile: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [pwd, setPwd] = useState({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
   const [saving, setSaving] = useState(false);
+  const [deletePwd, setDeletePwd] = useState("");
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: name === "age" ? value.replace(/[^0-9]/g, "") : value }));
@@ -185,6 +186,49 @@ const Profile: React.FC = () => {
             </div>
           </div>
 
+          {/* === Danger Zone: Delete Account === */}
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <FaLock className="profile-icon" />
+              <h3>Danger zone</h3>
+            </div>
+            <div className="profile-card-content">
+              <form
+                className="profile-form single"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!deletePwd) {
+                    await Swal.fire({ icon: "warning", title: "Password required", text: "Please confirm your password to delete the account." });
+                    return;
+                  }
+                  const result = await Swal.fire({
+                    icon: "warning",
+                    title: "Delete account?",
+                    text: "This action is irreversible. All your data will be removed.",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete",
+                    cancelButtonText: "Cancel",
+                  });
+                  if (!result.isConfirmed) return;
+                  const ok = await deleteAccount(deletePwd);
+                  if (!ok) return;
+                  setDeletePwd("");
+                }}
+              >
+                <label>
+                  Confirm your password
+                  <PasswordInput
+                    name="deletePassword"
+                    value={deletePwd}
+                    onChange={(e: any) => setDeletePwd(e.target.value)}
+                    autoComplete="current-password"
+                  />
+                </label>
+                <button className="btn btn-danger" type="submit">Delete Account</button>
+              </form>
+            </div>
+          </div>
+        
         
         </div>
       </div>
