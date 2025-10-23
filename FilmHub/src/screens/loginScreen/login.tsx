@@ -76,7 +76,7 @@ const Login: React.FC = () => {
       setIsSubmitting(true);
       // Si el servidor está frío, muestra un mensaje sutil después de 2s
       const slowTimer = setTimeout(() => setIsSlow(true), 2000);
-      await login(formData); // si login espera otro shape, tipéalo en useAuth
+      login(formData); // si login espera otro shape, tipéalo en useAuth
       clearTimeout(slowTimer);
     } finally {
       setIsSubmitting(false);
