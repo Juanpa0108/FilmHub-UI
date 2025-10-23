@@ -1,19 +1,22 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useFavorites } from "../../API/favoritesContext";
 import { useAuthContext } from "../../API/authContext";
+import { moviesData } from "../carrouselScreen/movieData";
+import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import { FaUserCircle } from "react-icons/fa";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
-import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import BackButton from "../../components/BackButton/BackButton";
-import "../../screens/carrouselScreen/carrouselScreen.css";
-import "./myReviewsScreen.css";
+import "../carrouselScreen/carrouselScreen.css";
+import "./favorites.css";
 
-const MyReviewsScreen: React.FC = () => {
+const Favorites: React.FC = () => {
+  const { favorites, remove } = useFavorites();
   const { state } = useAuthContext() as any;
   const user = state?.user;
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -34,29 +37,11 @@ const MyReviewsScreen: React.FC = () => {
       document.removeEventListener("keydown", handleEsc);
     };
   }, [userMenuOpen]);
-
-  const reviews = [
-    {
-      id: 1,
-      movieTitle: "Minecraft: The Movie",
-      image: "/images/minecraft.jpg",
-      rating: 4,
-      author: "Juan",
-      comment:
-        "Very fun and colorful! Perfect for kids and fans of the game. Jason Momoa was hilarious!",
-    },
-    {
-      id: 2,
-      movieTitle: "Oppenheimer",
-      image: "/images/oppenheimer.jpg",
-      rating: 5,
-      author: "Juan",
-      comment: "A masterpiece! Deep, thought-provoking, and powerful.",
-    },
-  ];
+  const favMovies = moviesData.filter((m) => favorites.includes(Number(m.id)));
 
   return (
-    <div className="app-container">
+    <div className="app-container favorites-wrapper">
+      {/* NAVBAR */}
       <div className="navbar">
         <div className="brand">
           <Link to="/" className="logo-link">
@@ -71,16 +56,14 @@ const MyReviewsScreen: React.FC = () => {
             <button
               className="menu-button"
               onClick={() => setMenuAbierto(!menuAbierto)}
-              aria-haspopup="true"
-              aria-expanded={menuAbierto}
             >
               ☰
             </button>
             {menuAbierto && (
-              <div className="dropdown-menu" role="menu">
-                <Link to="/categories" role="menuitem" onClick={() => setMenuAbierto(false)}>Categories</Link>
-                <Link to="/my-reviews" role="menuitem" onClick={() => setMenuAbierto(false)}>My Reviews</Link>
-                <Link to="/favorites" role="menuitem" onClick={() => setMenuAbierto(false)}>Favorites</Link>
+              <div className="dropdown-menu">
+                <Link to="/categories">Categories</Link>
+                <Link to="/my-reviews">My Reviews</Link>
+                <Link to="/favorites">Favorites</Link>
               </div>
             )}
           </div>
@@ -119,29 +102,39 @@ const MyReviewsScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Back button placed below navbar for better aesthetics */}
-      <BackButton className="page-back" />
+  {/* Back button below navbar */}
+  <BackButton className="page-back" />
 
-      <div className="reviews-section">
-        <h2>My Movies Reviews</h2>
-        <p>These are your latest movie ratings and comments.</p>
-
-        <div className="reviews-grid">
-          {reviews.map((review) => (
-            <div key={review.id} className="review-card">
-              <img src={review.image} alt={review.movieTitle} />
-              <div className="review-content">
-                <h3>{review.movieTitle}</h3>
-                <p className="rating">⭐ {review.rating}/5</p>
-                <p className="comment">"{review.comment}"</p>
-                <p className="author">- {review.author}</p>
+      <div className="favorites-header">
+        <h2>My Favorites</h2>
+      </div>
+      {favMovies.length === 0 ? (
+        <p className="empty">You don't have favorite movies yet.</p>
+      ) : (
+        <div className="favorites-grid">
+          {favMovies.map((m) => (
+            <div key={m.id} className="fav-card">
+              <img
+                src={m.thumbnailImage && !m.thumbnailImage.startsWith("/")
+                  ? `/movie/movie-website-landing-page-images/movies/${m.thumbnailImage}`
+                  : (m.thumbnailImage || "/images/fallback.png")}
+                alt={m.title}
+                className="fav-img"
+              />
+              <div className="fav-info">
+                <h4>{m.title}</h4>
+                <p className="muted">{m.genre} • {m.year}</p>
+              </div>
+              <div className="fav-actions">
+                <Link to={`/movie/${m.id}`} className="btn">Open</Link>
+                <button className="btn-outline" onClick={() => remove(Number(m.id))}>Remove</button>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default MyReviewsScreen;
+export default Favorites;

@@ -92,8 +92,7 @@ const Principal: React.FC = () => {
               <div className="dropdown-menu">
                 <Link to="/categories">Categories</Link>
                 <Link to="/my-reviews">My Reviews</Link>
-                <Link to="/premieres">Premieres</Link>
-                <Link to="/coming-soon">Coming Soon</Link>
+                <Link to="/favorites">Favorites</Link>
               </div>
             )}
           </div>

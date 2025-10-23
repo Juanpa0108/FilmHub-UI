@@ -1,0 +1,14 @@
+.favorites-wrapper{max-width:var(--container-max,1200px);margin:0 auto;padding:80px 40px 40px}
+.favorites-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.favorites-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.fav-card{background:#0c0c0b;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.fav-img{width:100%;height:140px;object-fit:cover;background:#151515}
+.fav-info{padding:10px 12px}
+.fav-info h4{margin:0 0 4px;font-size:16px}
+.fav-info .muted{opacity:.8;font-size:13px;margin:0}
+.fav-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:10px 12px}
+.btn{background:#1f6feb;color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px}
+.btn:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;color:#e6e6e9;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:6px 10px;cursor:pointer}
+.btn-outline:hover{border-color:#f5c518;color:#f5c518}
+.empty{opacity:.85}

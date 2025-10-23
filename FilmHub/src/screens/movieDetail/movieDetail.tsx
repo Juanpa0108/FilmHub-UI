@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { moviesData } from "../carrouselScreen/movieData";
 import { Movie } from "../../types/movie";
+import { useFavorites } from "../../API/favoritesContext";
 const logo = "/logo.png";
 import "./movieDetail.css";
 
@@ -15,6 +16,7 @@ type UserComment = {
 const MovieDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const movie: Movie | undefined = moviesData.find((m) => String(m.id) === id);
+  const { toggle, has } = useFavorites();
 
   const [comment, setComment] = useState<string>("");
   const [rating, setRating] = useState<number>(5);
@@ -90,6 +92,13 @@ const MovieDetail: React.FC = () => {
         </div>
 
         <div className="movie-description">{movie.description ?? ""}</div>
+
+        <div style={{ display: "flex", gap: 12, marginBottom: "1rem" }}>
+          <button className="btn" onClick={() => toggle(Number(movie.id))}>
+            {has(Number(movie.id)) ? "★ Remove from favorites" : "☆ Add to favorites"}
+          </button>
+          <Link to="/favorites" className="btn" style={{ background: "#333" }}>Go to Favorites</Link>
+        </div>
 
         {/* Comments */}
         <div className="comments-section">

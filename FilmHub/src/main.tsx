@@ -2,16 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { AuthProvider } from "./API/authContext";
+import { FavoritesProvider } from "./API/favoritesContext";
 import "./index.css";
 import Login from "./screens/loginScreen/login";
 import Register from "./screens/registerScreen/register";
 import Recovery from "./screens/recoveryScreen/recovery";
 import Principal from "./screens/mainScreen/principal";
+import Favorites from "./screens/favoritesScreen/Favorites";
 import MovieDetail from "./screens/movieDetail/movieDetail";
 import CarrouselScreen from "./screens/carrouselScreen/carrouselScreen";
 import CategoriesScreen from "./screens/categoriesScreen/categoriesScreen";
 import MyReviewsScreen from "./screens/myReviewsScreen/myReviewsScreen";
-import PremieresScreen from "./screens/premieresScreen/PremieresScreen";
 import Profile from "./screens/profileScreen/profileScreen";
 import PlayerScreen from "./screens/PlayerScreen/player";
 import Help from "./screens/helpScreen/help";
@@ -19,22 +20,25 @@ import About from "./screens/static/About";
 import Contact from "./screens/static/Contact";
 import Terms from "./screens/static/Terms";
 import Privacy from "./screens/static/Privacy";
+import BackButton from "./components/BackButton/BackButton";
 
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
     <AuthProvider>
+      <FavoritesProvider>
     
       <div className="app-wrapper">
+        <BackButton />
         <Routes>
           <Route path="/" element={<Principal />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/recovery" element={<Recovery />} />
           <Route path="/carrousel_principal" element={<CarrouselScreen />} />
           <Route path="/categories" element={<CategoriesScreen />} />
           <Route path="/my-reviews" element={<MyReviewsScreen />} />
-          <Route path="/premieres" element={<PremieresScreen />} />
           <Route path="/player/:id" element={<PlayerScreen />} />
           <Route path="/movie/:id" element={<MovieDetail />} /> 
           <Route path="/profile" element={<Profile />} /> 
@@ -71,14 +75,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               <h4>Explore</h4>
               <div className="footer-links">
                 <Link to="/categories">Categories</Link>
-                <Link to="/premieres">Premieres</Link>
                 <Link to="/my-reviews">My Reviews</Link>
+                <Link to="/favorites">Favorites</Link>
               </div>
             </div>
           </div>
           <p className="footer-copy">© 2025 FilmHub — All rights reserved.</p>
         </footer>
       </div>
+      </FavoritesProvider>
     </AuthProvider>
   </BrowserRouter>
 );
