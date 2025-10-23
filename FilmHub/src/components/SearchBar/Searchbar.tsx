@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import styles from "./Searchbar.module.css";
 
 type SearchbarProps = {
@@ -17,6 +17,7 @@ export default function Searchbar({
 }: SearchbarProps) {
   const [query, setQuery] = useState<string>(value);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const inputId = useId();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.currentTarget.value;
@@ -39,14 +40,23 @@ export default function Searchbar({
     <div className={styles.wrapper}>
       <form
         className={styles.searchBar}
+        role="search"
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
       >
+        {/* etiqueta accesible (oculta visualmente si no hay estilo) */}
+        <label htmlFor={inputId} className={styles.visuallyHidden}>
+          Search movies
+        </label>
         <input
           type="text"
           className={styles.searchInput}
           placeholder="Search movies..."
           value={query}
           onChange={handleChange}
+          id={inputId}
+          name="search"
+          autoComplete="search"
+          aria-label="Search movies"
         />
       </form>
 

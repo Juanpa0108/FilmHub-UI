@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaGoogle, FaGithub, FaTwitter } from "react-icons/fa";
 import "./register.css";
-import useAuth from "../../API/auth.js";
+import useAuth from "../../API/auth";
 import { Link, useNavigate } from "react-router-dom";
 import AnimatedBackground from "../../components/particles/particles";
 import BrandLogo from "../../components/BrandLogo/BrandLogo"; 
@@ -164,6 +164,8 @@ const Register: React.FC = () => {
             value={formData.username}
             onChange={handleChange}
             required
+            autoComplete="username"
+            id="register-username"
           />
           <input
             type="text"
@@ -171,6 +173,8 @@ const Register: React.FC = () => {
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
+            autoComplete="family-name"
+            id="register-lastname"
           />
           <input
             type="number"
@@ -179,6 +183,8 @@ const Register: React.FC = () => {
             min={0}
             value={formData.age}
             onChange={handleChange}
+            autoComplete="bday"
+            id="register-age"
           />
           <input
             type="email"
@@ -187,6 +193,8 @@ const Register: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            autoComplete="email"
+            id="register-email"
           />
           <PasswordInput
             name="password"

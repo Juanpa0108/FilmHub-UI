@@ -214,7 +214,7 @@
         top: auto;
         transform: none;
         margin-top: 20px;
-        width: min(92vw, 360px);
+        width: min(92vw, 340px);
     }
     
     .carrousel-screen .banner {
@@ -231,5 +231,12 @@
         .carrousel-screen .movie-description{
             font-size: 1.05em;
             line-height: 1.5em;
+        }
+        /* Escala del carrusel en móvil para que no se corte */
+        .carrousel-screen .carousel { height: clamp(320px, 46vh, 420px); }
+        .carrousel-screen .carousel .carousel-item { width: 200px; }
+        .carrousel-screen .carousel .carousel-item img {
+            max-width: 190px;
+            transform: translateX(0) translateY(0); /* evita recorte superior */
         }
 }

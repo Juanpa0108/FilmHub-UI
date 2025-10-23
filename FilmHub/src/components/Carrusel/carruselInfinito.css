@@ -23,3 +23,8 @@
 }
 
 /* Movimiento controlado por JS con requestAnimationFrame en el componente */
+
+/* Responsive */
+@media (max-width: 480px){
+    .carrusel-img{ width: 150px; }
+}
