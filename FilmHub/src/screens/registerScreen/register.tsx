@@ -1,3 +1,15 @@
+/**
+ * Register.tsx
+ * -----------------------------------------------------
+ * User registration page for the Cinephile platform.
+ * Features:
+ *  - Real-time validation of user input fields
+ *  - Password strength progress bar
+ *  - Integration with custom authentication hook (`useAuth`)
+ *  - Redirects logged-in users away from registration
+ *  - Responsive design with animated background
+ */
+
 import React, { useState, useEffect } from "react";
 import { FaGoogle, FaGithub, FaTwitter } from "react-icons/fa";
 import "./register.css";
@@ -8,21 +20,26 @@ import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 import { apiPath } from "../../config/env";
 
+// ------------------ Types ------------------ //
 type FormData = {
   username: string;
   lastName: string;
-  age: string; // keep as string for input, convert on submit
+  age: string; // stored as string for input; converted to number on submit
   email: string;
   password: string;
   confirmPassword: string;
 };
 
+// ------------------ Component ------------------ //
 const Register: React.FC = () => {
+  // Access register function from custom auth hook
   const { register: registrarUsuario } = useAuth() as {
     register: (data: { email: string; username: string; password: string; lastName?: string; age?: number }) => Promise<void>;
   };
+
   const navigate = useNavigate();
 
+  // ------------------ State ------------------ //
   const [formData, setFormData] = useState<FormData>({
     username: "",
     lastName: "",
@@ -31,31 +48,52 @@ const Register: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // Evitar rebote: si parece haber sesión, verificar con backend
+
+  // ------------------ Session Check ------------------ //
+  /**
+   * Checks if a valid session token exists in localStorage.
+   * If yes, verifies with backend and redirects to homepage.
+   */
   useEffect(() => {
     let cancelled = false;
+
     const check = async () => {
       const token = localStorage.getItem("accessToken");
       const stored = localStorage.getItem("user");
       const user = stored ? JSON.parse(stored) : null;
-      const looksValid = !!token && !!user?.expirationDate && user.expirationDate > Date.now();
+
+      const looksValid =
+        !!token && !!user?.expirationDate && user.expirationDate > Date.now();
+
       if (!looksValid) return;
+
       try {
         const res = await fetch(apiPath("/api/auth/verify"), {
           method: "GET",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           credentials: "include",
         });
+
         if (!cancelled && res.ok) {
           navigate("/", { replace: true });
         }
-      } catch {}
+      } catch {
+        // ignore errors silently
+      }
     };
+
     check();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [navigate]);
-  // Estado para requisitos y progreso
+
+  // ------------------ Validation State ------------------ //
+  /**
+   * Tracks field validation status for progress bar and requirement list.
+   */
   const [requirements, setRequirements] = useState({
     username: false,
     lastName: false,
@@ -69,20 +107,25 @@ const Register: React.FC = () => {
     confirm: false,
   });
 
-  // Utility to compute progress percentage
+  // Compute password strength / form completeness percentage
   const computeProgress = (reqs: typeof requirements) => {
     const keys = Object.keys(reqs);
     const satisfied = keys.filter((k) => (reqs as any)[k]).length;
     return Math.round((satisfied / keys.length) * 100);
   };
 
+  // ------------------ Handle Input Changes ------------------ //
+  /**
+   * Updates form data and dynamically validates input fields.
+   */
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.currentTarget;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Update inline validations as user types
     setRequirements((prev) => {
       const next = { ...prev } as any;
+
+      // Validate each field in real time
       if (name === "username") next.username = value.trim().length > 0;
       if (name === "lastName") next.lastName = value.trim().length > 0;
       if (name === "age") {
@@ -100,7 +143,6 @@ const Register: React.FC = () => {
         next.lowercase = /[a-z]/.test(val);
         next.number = /\d/.test(val);
         next.special = /[^A-Za-z0-9]/.test(val);
-        // also update confirm when password changes
         next.confirm = formData.confirmPassword === val && val.length > 0;
       }
       if (name === "confirmPassword") {
@@ -110,10 +152,15 @@ const Register: React.FC = () => {
     });
   };
 
+  // ------------------ Handle Submit ------------------ //
+  /**
+   * Validates all fields and registers a new user.
+   */
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-  const { username, lastName, age, email, password, confirmPassword } = formData;
+    const { username, lastName, age, email, password, confirmPassword } = formData;
 
+    // Basic validations before submit
     if (!username || !email || !password || !confirmPassword) {
       alert("Please fill in all fields.");
       return;
@@ -127,9 +174,16 @@ const Register: React.FC = () => {
       return;
     }
 
-  setIsLoading(true);
+    // Attempt registration
+    setIsLoading(true);
     try {
-  await registrarUsuario({ email, username, password, lastName, age: age ? Number(age) : undefined });
+      await registrarUsuario({
+        email,
+        username,
+        password,
+        lastName,
+        age: age ? Number(age) : undefined,
+      });
       navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);
@@ -138,9 +192,12 @@ const Register: React.FC = () => {
     }
   };
 
+  // ------------------ Render ------------------ //
   return (
     <div className="register-wrapper">
       <AnimatedBackground />
+
+      {/* Header section */}
       <header id="header">
         <div id="header-content">
           <div className="logo">
@@ -155,8 +212,10 @@ const Register: React.FC = () => {
         </div>
       </header>
 
+      {/* Registration form */}
       <div className="register-container">
         <form className="register-form" onSubmit={handleSubmit}>
+          {/* Basic info inputs */}
           <input
             type="text"
             name="username"
@@ -196,6 +255,8 @@ const Register: React.FC = () => {
             autoComplete="email"
             id="register-email"
           />
+
+          {/* Password and confirmation */}
           <PasswordInput
             name="password"
             value={formData.password}
@@ -213,7 +274,8 @@ const Register: React.FC = () => {
             autoComplete="new-password"
             ariaLabel="Confirm password"
           />
-          {/* Progress bar and requirements */}
+
+          {/* Progress bar + validation checklist */}
           <div className="requirements-wrapper">
             <div className="progress-bar">
               <div
@@ -235,12 +297,18 @@ const Register: React.FC = () => {
               <li className={requirements.confirm ? "satisfied" : ""}>Passwords match</li>
             </ul>
           </div>
-          <button type="submit" className="btn-gradient" disabled={isLoading || computeProgress(requirements) < 100}>
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            className="btn-gradient"
+            disabled={isLoading || computeProgress(requirements) < 100}
+          >
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
 
-
+        {/* Social login icons */}
         <div className="social-login-register">
           <p>Or sign up with</p>
           <div className="social-icons-register">
@@ -250,6 +318,7 @@ const Register: React.FC = () => {
           </div>
         </div>
 
+        {/* Redirect to login */}
         <p className="login-link">
           Have an account? <Link to="/login">Login</Link>
         </p>
