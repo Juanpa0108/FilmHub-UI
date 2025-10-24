@@ -21,7 +21,7 @@ const PlayerScreen: React.FC = () => {
   const { state } = useAuthContext() as any;
   const isAuthenticated = !!state?.user; // Boolean check for logged-in user
 
-  // Find the movie by its ID
+  // Find the movie by its ID from local dataset
   const movie = moviesData.find((m) => m.id === id);
 
   /**
@@ -30,12 +30,12 @@ const PlayerScreen: React.FC = () => {
    * - If movie not found → redirect to home (/)
    */
   useEffect(() => {
-  if (!isAuthenticated) {
-    navigate("/login", { replace: true }); // 🔄 Replaces current history entry
-  } else if (!movie) {
-    navigate("/", { replace: true }); // Avoids back loop too
-  }
-}, [isAuthenticated, movie, navigate]);
+    if (!isAuthenticated) {
+      navigate("/login", { replace: true }); // 🔄 Replaces current history entry
+    } else if (!movie) {
+      navigate("/", { replace: true }); // Avoids back loop too
+    }
+  }, [isAuthenticated, movie, navigate]);
 
   // Prevent rendering while redirecting (avoids flickering)
   if (!isAuthenticated || !movie) return null;
@@ -51,10 +51,23 @@ const PlayerScreen: React.FC = () => {
           ← Back
         </button>
 
-        {/* Embedded YouTube video */}
+        {/* Embedded YouTube video (local movieData) */}
         <ReactPlayer
           className="react-player"
-          url={movie.videoUrl}
+          src={movie.videoUrl}
+          config={{
+            youtube: {
+              playerVars: {
+                origin: window.location.origin,
+                rel: 0,
+                modestbranding: 1,
+                playsinline: 1,
+              },
+              embedOptions: {
+                host: 'https://www.youtube.com',
+              },
+            },
+          }}
           controls
           playing
           width="100%"

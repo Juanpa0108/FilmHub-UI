@@ -1,5 +1,7 @@
 .categories-section {
-  padding: 80px 40px 40px;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 24px 16px 40px;
   color: white;
   text-align: center;
 }
@@ -17,7 +19,7 @@
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 20px;
   max-width: 1000px;
   margin: 0 auto;
@@ -26,10 +28,10 @@
 .category-card {
   background: rgba(255, 255, 255, 0.06);
   border-radius: 12px;
-  padding: 20px;
+  padding: 24px;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  transition: transform 0.3s;
+  transition: transform 0.3s, background 0.3s;
   cursor: pointer;
 }
 
@@ -39,7 +41,7 @@
 }
 
 .category-emoji {
-  font-size: 28px;
+  font-size: 32px;
   display: block;
   margin-bottom: 10px;
 }
@@ -61,3 +63,101 @@
 .brand-text-link:hover .brand-subtext {
   color: #f39c12;
 }
+
+/* ===========================
+   TABLET (<= 1024px)
+   =========================== */
+@media (max-width: 1024px) {
+  .categories-section {
+    padding: 20px 16px 36px;
+  }
+
+  .categories-section h2 {
+    font-size: 28px;
+  }
+
+  .categories-grid {
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .category-card {
+    padding: 20px;
+  }
+
+  .category-emoji {
+    font-size: 28px;
+  }
+}
+
+/* ===========================
+   MOBILE (<= 768px)
+   =========================== */
+@media (max-width: 768px) {
+  .categories-section {
+    padding: 16px 12px 32px;
+  }
+
+  .categories-section h2 {
+    font-size: 24px;
+  }
+
+  .categories-section p {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .categories-grid {
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .category-card {
+    padding: 16px;
+  }
+
+  .category-emoji {
+    font-size: 26px;
+  }
+
+  .category-name {
+    font-size: 16px;
+  }
+}
+
+/* ===========================
+   SMALL MOBILE (<= 480px)
+   =========================== */
+@media (max-width: 480px) {
+  .categories-section {
+    padding: 12px 10px 24px;
+  }
+
+  .categories-section h2 {
+    font-size: 20px;
+  }
+
+  .categories-section p {
+    font-size: 14px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .category-card {
+    padding: 14px;
+  }
+
+  .category-emoji {
+    font-size: 24px;
+  }
+
+  .category-name {
+    font-size: 15px;
+  }
+}
+
+/* === Botón de retroceso fijo (Back) === */
+/* back-button styles are centralized in src/index.css to ensure consistent appearance across pages. */

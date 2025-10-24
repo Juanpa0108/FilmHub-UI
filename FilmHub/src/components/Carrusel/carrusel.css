@@ -1,104 +1,236 @@
-/* Estructura principal */
+/* =============================
+   ESTILOS BASE
+   ============================= */
 .movies-carousel {
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    color: #fff;
-  }
-  
-  .carousel-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .carousel-header h2 {
-    font-size: 1.75rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Contenedor del carrusel */
-  .carousel-container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
-  }
-  
-  /* Pista del carrusel */
-  .carousel-track {
-    display: flex;
-    gap: 1.25rem;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  /* Tarjetas de películas */
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: #fff;
+}
+
+.carousel-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.carousel-header h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* =============================
+   CARRUSEL
+   ============================= */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.25rem;
+  width: 100%;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Tarjetas de películas */
+.movie-card {
+  flex: 0 0 calc(25% - 1rem);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-0.25rem);
+}
+
+.movie-percent {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #FFD700;
+  margin-bottom: 0.75rem;
+}
+
+.movie-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.movie-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* =============================
+   BOTONES
+   ============================= */
+.carousel-arrow {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.05);
+}
+
+/* =============================
+   PIE DEL CARRUSEL
+   ============================= */
+.view-all {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.view-all button {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 1.5rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-all button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+/* =============================
+   RESPONSIVE
+   ============================= */
+
+/* Tablets grandes (≤ 992px) */
+@media (max-width: 992px) {
   .movie-card {
-    flex: 0 0 calc(25% - 1rem);
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(8px);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    transition: transform 0.3s ease;
+    flex: 0 0 calc(33.333% - 1rem);
   }
-  
-  .movie-card:hover {
-    transform: translateY(-0.25rem);
-  }
-  
-  .movie-rating {
+
+  .carousel-header h2 {
     font-size: 1.5rem;
-    font-weight: bold;
-    color: #FFD700;
-    margin-bottom: 0.75rem;
   }
-  
-  .movie-details h3 {
+}
+
+/* Tablets medianas (≤ 768px) */
+@media (max-width: 768px) {
+  .movie-card {
+    flex: 0 0 calc(50% - 1rem);
+    padding: 1rem;
+  }
+
+  .carousel-wrapper {
+    gap: 0.75rem;
+  }
+
+  .carousel-arrow {
+    width: 2.25rem;
+    height: 2.25rem;
     font-size: 1rem;
-    margin-bottom: 0.5rem;
   }
-  
-  .movie-subtitle {
-    font-size: 0.875rem;
-    opacity: 0.8;
+}
+
+/* Móviles (≤ 480px) */
+@media (max-width: 480px) {
+  .movie-card {
+    flex: 0 0 80%;
+    margin: 0 auto;
   }
-  
-  /* Botones de navegación */
-  .carousel-button {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
+
+  .carousel-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .movie-card {
+    scroll-snap-align: center;
+  }
+
+  .carousel-arrow {
+    display: none; /* Quita las flechas en móvil */
+  }
+
+  .carousel-header h2 {
     font-size: 1.25rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
   }
-  
-  .carousel-button:hover {
-    background: rgba(255, 255, 255, 0.12);
-    transform: scale(1.05);
+
+  .view-all button {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
   }
-  
-  /* Pie del carrusel */
-  .carousel-footer {
-    text-align: center;
-    margin-top: 2rem;
+}
+
+/* ====== Ajustes visuales para móviles ====== */
+@media (max-width: 768px) {
+  .header {
+    padding: 8px 12px;
   }
-  
-  .view-all-btn {
-    background: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 0.5rem 1.5rem;
-    border-radius: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+
+  .movies-carousel {
+    margin-top: 1rem; /* separa del header */
+    padding: 0 0.5rem;
   }
-  
-  .view-all-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: white;
+
+  .carousel-track {
+    gap: 0.75rem;
   }
+
+  .movie-card {
+    flex: 0 0 calc(50% - 0.75rem);
+    padding: 0.75rem;
+  }
+
+  .movie-card .movie-title {
+    font-size: 0.9rem;
+  }
+
+  .movie-card .movie-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .carousel-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .carousel-header p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ====== Ajustes para pantallas muy pequeñas ====== */
+@media (max-width: 480px) {
+  .movies-carousel {
+    margin-top: 0.5rem;
+  }
+
+  .movie-card {
+    flex: 0 0 80%;
+    margin: 0 auto;
+  }
+
+  .carousel-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carousel-arrow {
+    display: none; /* Oculta las flechas en pantallas pequeñas */
+  }
+}

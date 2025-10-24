@@ -20,7 +20,7 @@ import About from "./screens/static/About";
 import Contact from "./screens/static/Contact";
 import Terms from "./screens/static/Terms";
 import Privacy from "./screens/static/Privacy";
-import BackButton from "./components/BackButton/BackButton";
+
 
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <FavoritesProvider>
     
       <div className="app-wrapper">
-        <BackButton />
+        
         <Routes>
           <Route path="/" element={<Principal />} />
           <Route path="/favorites" element={<Favorites />} />

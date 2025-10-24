@@ -19,6 +19,8 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+    /* safe area (iOS notch) */
+    padding-top: env(safe-area-inset-top);
 }
 
 /* Contenedor del video */
@@ -49,10 +51,10 @@ body {
 }
 
 /* Botón “Volver” arriba */
-.back-button {
+.player-container .back-button {
     position: absolute;
-    top: 20px;
-    left: 20px;
+        top: calc(16px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
     background-color: orange;
     color: white;
     border: none;
@@ -65,7 +67,14 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.back-button:hover {
+.player-container .back-button:hover {
     background-color: darkorange;
     transform: scale(1.05);
+}
+
+/* Mobile tweaks to reduce aggressive crop */
+@media (max-width: 600px) {
+    .react-player iframe {
+        transform: scale(1.02);
+    }
 }

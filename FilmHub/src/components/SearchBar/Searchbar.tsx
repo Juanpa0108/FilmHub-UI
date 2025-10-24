@@ -2,18 +2,18 @@ import { useId, useState } from "react";
 import styles from "./Searchbar.module.css";
 
 type SearchbarProps = {
-  /** Función opcional que se llama cuando cambia el valor de búsqueda */
+  /** Optional callback invoked whenever the search value changes */
   onSearch?: (value: string) => void;
-  /** Lista de sugerencias opcional */
+  /** Optional list of suggestion strings */
   suggestions?: string[];
-  /** Valor inicial opcional */
+  /** Optional initial value */
   value?: string;
 };
 
 export default function Searchbar({
-  onSearch = () => {},          // ← función vacía por defecto
-  suggestions = [],             // ← sugerencias opcionales
-  value = "",                   // ← valor inicial opcional
+  onSearch = () => {},          // default no-op callback
+  suggestions = [],             // optional suggestions
+  value = "",                   // optional initial value
 }: SearchbarProps) {
   const [query, setQuery] = useState<string>(value);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -22,7 +22,7 @@ export default function Searchbar({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.currentTarget.value;
     setQuery(v);
-    onSearch(v); // Llama a la función solo si fue pasada
+  onSearch(v); // notify parent about the new value
 
     const filtered = suggestions.filter((s) =>
       s.toLowerCase().includes(v.toLowerCase())
@@ -43,7 +43,7 @@ export default function Searchbar({
         role="search"
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
       >
-        {/* etiqueta accesible (oculta visualmente si no hay estilo) */}
+  {/* Accessible label (visually hidden via CSS utility) */}
         <label htmlFor={inputId} className={styles.visuallyHidden}>
           Search movies
         </label>
