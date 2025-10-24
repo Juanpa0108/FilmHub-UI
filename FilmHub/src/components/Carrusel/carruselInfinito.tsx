@@ -1,64 +1,99 @@
 import { useEffect, useRef } from "react";
 import "./carruselInfinito.css";
 
-// Tipamos las props: un array de strings con URLs
+/**
+ * Props for the `CarruselInfinito` component.
+ * @property {string[]} [images] - Optional array of image URLs.
+ * If not provided, default placeholder images from `/font-awesome/images` are used.
+ */
 type CarruselInfinitoProps = {
-  images?: string[]; // If not provided, we'll use defaults from /font-awesome/images
+  images?: string[];
 };
 
+/**
+ * `CarruselInfinito` Component
+ *
+ * Displays an infinitely scrolling horizontal carousel.
+ * The carousel duplicates its image set and continuously translates it
+ * leftwards using a smooth animation powered by `requestAnimationFrame`.
+ *
+ * Designed for logos, banners, or partner strips that should scroll endlessly.
+ *
+ * @example
+ * ```tsx
+ * <CarruselInfinito images={["/logos/logo1.png", "/logos/logo2.png"]} />
+ * ```
+ */
 export default function CarruselInfinito({ images = [] }: CarruselInfinitoProps) {
-  // Tipamos el ref como un DIV del DOM (o cambia a HTMLElement si no es <div>)
+  /** Reference to the carousel container element (DOM node). */
   const carruselRef = useRef<HTMLDivElement | null>(null);
+
+  /** Reference to the current animation frame (used for cleanup). */
   const rafRef = useRef<number | null>(null);
+
+  /** Timestamp of the last animation frame. */
   const lastTsRef = useRef<number | null>(null);
+
+  /** Current horizontal offset in pixels. */
   const offsetRef = useRef<number>(0);
 
-  // Helper: build absolute URL respecting Vite base
+  /**
+   * Utility: returns a valid absolute URL respecting the Vite `BASE_URL`.
+   * Keeps full or absolute URLs untouched.
+   */
   const withBase = (p: string) => {
     const base = (import.meta as any).env?.BASE_URL ?? "/";
-    // keep full urls or absolute starting with '/'
     if (/^(https?:)?\/\//i.test(p) || p.startsWith("/")) return p;
     return `${base.replace(/\/$/, "")}/${p.replace(/^\//, "")}`;
   };
 
+  /**
+   * Animation effect:
+   * - Disables CSS animation to avoid conflicts.
+   * - Continuously shifts the carousel content left.
+   * - Resets to the start once half of the duplicated content has scrolled.
+   */
   useEffect(() => {
     const el = carruselRef.current;
     if (!el) return;
-    // Desactiva la animación CSS para evitar conflictos
+
+    // Disable any CSS-based animations for smoother control
     el.style.animation = "none";
     el.style.willChange = "transform";
 
-    const speedPxPerSec = 60; // velocidad suave (px/seg)
+    const speedPxPerSec = 60; // Smooth scrolling speed (pixels per second)
     let halfWidth = 0;
 
+    /** Measures half of the total scroll width (for looping reset). */
     const measure = () => {
-      // Metade del ancho del contenido duplicado
       halfWidth = el.scrollWidth / 2;
     };
     measure();
 
-    const onResize = () => {
-      measure();
-    };
+    const onResize = () => measure();
     window.addEventListener("resize", onResize);
 
+    /** Frame-by-frame animation handler. */
     const step = (ts: number) => {
       if (lastTsRef.current == null) lastTsRef.current = ts;
-      const dt = (ts - lastTsRef.current) / 1000; // seg
+      const dt = (ts - lastTsRef.current) / 1000; // convert to seconds
       lastTsRef.current = ts;
 
-      // Desplazar a la izquierda
+      // Move the carousel left
       offsetRef.current -= speedPxPerSec * dt;
-      // Cuando recorremos la primera mitad, reiniciamos
+
+      // Reset to start when the first half finishes scrolling
       if (-offsetRef.current >= halfWidth) {
         offsetRef.current = 0;
       }
-      el.style.transform = `translateX(${offsetRef.current}px)`;
 
+      el.style.transform = `translateX(${offsetRef.current}px)`;
       rafRef.current = requestAnimationFrame(step);
     };
+
     rafRef.current = requestAnimationFrame(step);
 
+    /** Cleanup: stop animation and reset styles. */
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", onResize);
@@ -68,7 +103,7 @@ export default function CarruselInfinito({ images = [] }: CarruselInfinitoProps)
     };
   }, []);
 
-  // Use defaults from public if consumer didn't pass any images
+  /** Default fallback images (from `/public/font-awesome/images`). */
   const defaultImgs = [
     "font-awesome/images/img1.jpg",
     "font-awesome/images/img2.jpg",
@@ -76,24 +111,25 @@ export default function CarruselInfinito({ images = [] }: CarruselInfinitoProps)
     "font-awesome/images/img4.jpg",
   ].map(withBase);
 
+  /** Final image list (user-provided or defaults). */
   const imgs = (images.length ? images : defaultImgs).map(withBase);
 
   return (
     <div data-testid="carrusel-container" className="carrusel-container">
-      {/* Asegúrate que este sea un <div> para que coincida con HTMLDivElement */}
+      {/* Main scrolling container */}
       <div data-testid="carrusel" className="carrusel" ref={carruselRef}>
         {[...imgs, ...imgs].map((img, index) => (
           <img
             key={index}
             src={img}
-            alt={`Carrusel item ${(index % imgs.length) + 1}`}
+            alt={`Carousel item ${(index % imgs.length) + 1}`}
             data-testid={`carrusel-item-${index + 1}`}
             className="carrusel-img"
             onError={(e) => {
-              // Fallback para evitar alt text feo si la ruta falla
+              // Fallback to logo if the image fails to load
               const target = e.currentTarget as HTMLImageElement;
               if (!target.dataset.fallback) {
-                console.warn("CarruselInfinito: imagen no encontrada, usando fallback:", img);
+                console.warn("CarruselInfinito: Image not found, using fallback:", img);
                 target.src = withBase("logo.png");
                 target.dataset.fallback = "1";
               }
