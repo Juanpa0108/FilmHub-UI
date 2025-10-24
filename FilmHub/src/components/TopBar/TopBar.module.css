@@ -112,6 +112,18 @@ body {
   background: rgba(255,255,255,0.08);
 }
 
+/* Make the Logout button look like the other dropdown items (consistent with navbar.css) */
+.menuItem :global(.logout-btn) {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header {
