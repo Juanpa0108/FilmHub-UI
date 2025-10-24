@@ -1,9 +1,12 @@
+/**
+ * AuthContext
+ * - Thin wrapper around useAuth hook to expose auth state/actions via React Context
+ */
 import { createContext, useContext, type ReactNode } from "react";
-import useAuth from "./auth"; // .js está bien con allowJs; si lo renombras a .ts, deja "./auth"
+import useAuth from "./auth"; // .js works with allowJs; if you rename to .ts, keep "./auth"
 
 type AuthContextValue = ReturnType<typeof useAuth>; 
-// Si TS no infiere (porque useAuth es JS y devuelve 'any'),
-// puedes reemplazar por un tipo explícito:
+// If TS can't infer because useAuth is JS and returns 'any', you can replace with an explicit type:
 // type AuthContextValue = {
 //   user: { id: string; name: string; email: string } | null;
 //   token?: string;
@@ -21,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuthContext debe usarse dentro de un AuthProvider");
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 }

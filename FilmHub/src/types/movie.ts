@@ -5,7 +5,9 @@ export type Movie = {
   title: string;
   titleImage: string;
   backgroundImage: string;
-  thumbnailImage: string; // ← obligatorio
+  thumbnailImage: string; 
+  trailer?: string; 
+  videoUrl?: string; 
   alt?: string;
   year?: string | number;
   rating?: string | number;

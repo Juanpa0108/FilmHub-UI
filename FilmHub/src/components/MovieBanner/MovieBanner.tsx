@@ -28,7 +28,8 @@ export default function MovieBanner({
       className="banner"
       role="banner"
       style={{
-        background: `url("${backgroundImage}")`,
+        backgroundImage: `url("${backgroundImage}")`,
+        backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

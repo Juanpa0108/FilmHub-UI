@@ -7,29 +7,26 @@
     box-sizing: border-box;
 }
 
-
 .carrousel-screen body {
     --primary: #B659CD;
     background: #0c0c0b;
     font-family: 'Poppins', sans-serif;
 }
 
-
 /* Banner con fondo completo */
 .carrousel-screen .banner {
     position: relative;
     width: 100%;
-    /* Evitar estiramiento en zoom: altura controlada */
-    min-height: 480px;   /* nunca menos de 480px */
-    height: 80vh;        /* altura ideal relativa al viewport */
-    max-height: 900px;   /* nunca más de 900px */
+    min-height: 480px;
+    height: 80vh;
+    max-height: 900px;
     min-width: 100%;
-    padding: 0 24px; /* alinear contenido interno con la grilla */
+    padding: 0 24px;
     margin: 0 auto;
     max-width: var(--container-max);
     display: flex;
-    justify-content: left; /* Centrar contenido horizontalmente */
-    align-items: center; /* Centrar contenido verticalmente */
+    justify-content: left;
+    align-items: center;
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
@@ -38,7 +35,7 @@
     z-index: 1;
 }
 
-/* Overlay más sutil para mejor legibilidad */
+/* Overlay */
 .carrousel-screen .banner::before {
     position: absolute;
     content: '';
@@ -47,17 +44,18 @@
     right: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Más transparente */
+    background: rgba(0, 0, 0, 0.4);
     z-index: 1;
 }
+
 .carrousel-screen .content {
     position: absolute;
-    z-index: 2; /* Por encima del overlay */
+    z-index: 2;
     max-width: min(620px, 48vw);
     padding: 0;
-    text-align: left; /* evitar centrado raro en pantallas estrechas */
-    display: block;           /* mantiene el layout estable */
-    opacity: 0;               /* oculto por opacidad */
+    text-align: left;
+    display: block;
+    opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transition: opacity .35s ease, visibility 0s linear .35s;
@@ -74,24 +72,24 @@
 }
 
 .carrousel-screen .movie-title-image {
-    max-width: 300px; /* Un poco más grande */
+    max-width: 300px;
     margin-bottom: 20px;
 }
 
-
 .carrousel-screen .movie-title {
-    color: rgba(255, 255, 255, 0.9); /* Más opaco */
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 400;
-    font-size: 24px; /* Tamaño más apropiado */
+    font-size: 24px;
     margin-bottom: 15px;
 }
+
 .carrousel-screen .movie-title span {
     padding: 0 10px;
-    border-right:1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .carrousel-screen .movie-title span:first-child {
-    padding-left: 0 ;
+    padding-left: 0;
 }
 
 .carrousel-screen .movie-title span:last-child {
@@ -116,7 +114,7 @@
 }
 
 .carrousel-screen .banner .content .button {
-    position:relative;
+    position: relative;
 }
 
 .carrousel-screen .banner .content .button a {
@@ -152,8 +150,8 @@
 }
 
 .carrousel-screen .banner .carousel-box {
-    position: absolute; /* anchor inside banner, not viewport */
-    right: clamp(16px, 4vw, 64px); /* alinear responsive con los márgenes */
+    position: absolute;
+    right: clamp(16px, 4vw, 64px);
     top: 50%;
     transform: translateY(-50%);
     width: clamp(300px, 42vw, 520px);
@@ -165,7 +163,7 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(20px);
     border-radius: 10px;
-    z-index: 2; /* above overlay */
+    z-index: 2;
 }
 
 .carrousel-screen .carousel {
@@ -187,10 +185,7 @@
     object-position: center;
 }
 
-
-/* Removed viewport-fixed carousel; it now stays within banner */
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 1200px) {
     .carrousel-screen .banner .carousel-box {
         right: 16px;
@@ -199,7 +194,6 @@
 }
 
 @media (max-width: 768px) {
-    /* En móvil, el contenido aparece arriba y el carrusel debajo */
     .carrousel-screen .content {
         left: 0;
         right: 0;
@@ -218,25 +212,90 @@
     }
     
     .carrousel-screen .banner {
-        /* En móvil, dejamos que el contenido defina la altura para evitar saltos al hacer zoom */
         height: auto;
         max-height: none;
         flex-direction: column;
         padding: 16px;
-            gap: 12px;
-        }
-        .carrousel-screen .content {
-            max-width: 92vw; /* evita que el texto se salga */
-        }
-        .carrousel-screen .movie-description{
-            font-size: 1.05em;
-            line-height: 1.5em;
-        }
-        /* Escala del carrusel en móvil para que no se corte */
-        .carrousel-screen .carousel { height: clamp(320px, 46vh, 420px); }
-        .carrousel-screen .carousel .carousel-item { width: 200px; }
-        .carrousel-screen .carousel .carousel-item img {
-            max-width: 190px;
-            transform: translateX(0) translateY(0); /* evita recorte superior */
-        }
+        gap: 12px;
+    }
+    .carrousel-screen .content {
+        max-width: 92vw;
+    }
+    .carrousel-screen .movie-description {
+        font-size: 1.05em;
+        line-height: 1.5em;
+    }
+    .carrousel-screen .carousel {
+        height: clamp(320px, 46vh, 420px);
+    }
+    .carrousel-screen .carousel .carousel-item {
+        width: 200px;
+    }
+    .carrousel-screen .carousel .carousel-item img {
+        max-width: 190px;
+        transform: translateX(0) translateY(0);
+    }
 }
+
+/* ====== Ajustes visuales para móviles ====== */
+@media (max-width: 768px) {
+  .header {
+    padding: 8px 12px;
+  }
+
+  .movies-carousel {
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .carousel-track {
+    gap: 0.75rem;
+  }
+
+  .movie-card {
+    flex: 0 0 calc(50% - 0.75rem);
+    padding: 0.75rem;
+  }
+
+  .movie-card .movie-title {
+    font-size: 0.9rem;
+  }
+
+  .movie-card .movie-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .carousel-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .carousel-header p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ====== Ajustes para pantallas muy pequeñas ====== */
+@media (max-width: 480px) {
+  .movies-carousel {
+    margin-top: 0.5rem;
+  }
+
+  .movie-card {
+    flex: 0 0 80%;
+    margin: 0 auto;
+  }
+
+  .carousel-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carousel-arrow {
+    display: none;
+  }
+}
+
+/* ===============================
+   BOTÓN BACK FIJO EN PANTALLA
+   =============================== */
+/* back-button moved to global styles (src/index.css). Remove local duplicate rules to avoid conflicts. */

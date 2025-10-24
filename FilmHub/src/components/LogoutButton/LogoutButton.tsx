@@ -18,7 +18,7 @@ const LogoutButton = () => {
     });
 
     if (result.isConfirmed) {
-      logout(); // Ya incluye navigate("/login")
+      logout(); // Implementation already handles navigation to "/login"
     }
   };
 

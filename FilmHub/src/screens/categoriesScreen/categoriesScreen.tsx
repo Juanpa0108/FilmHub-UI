@@ -1,19 +1,26 @@
+/**
+ * Categories and Movie Detail (dual-mode) screen
+ * - When no :id param is provided, shows a simple list of categories
+ * - When :id is present and matches a local movie, shows its detail with comments form
+ * - Uses global navbar and sticky back button
+ */
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { moviesData } from "../carrouselScreen/movieData";
 import { Movie } from "../../types/movie";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
-import BackButton from "../../components/BackButton/BackButton";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import { useAuthContext } from "../../API/authContext";
 import { FaUserCircle } from "react-icons/fa";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
-import "../movieDetail/movieDetail.css";
+import "./categoriesScreen.css";
+import { apiPath } from "../../config/env";
 
 type UserComment = { id: number; text: string; rating: number; date: string };
 
 const MovieDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const movie: Movie | undefined = id ? moviesData.find((m) => String(m.id) === id) : undefined;
 
   const [comment, setComment] = useState<string>("");
@@ -51,26 +58,52 @@ const MovieDetail: React.FC = () => {
     ? `/movie/movie-website-landing-page-images/${movie.backgroundImage}`
     : "";
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  // Submit a review for the selected movie (only in detail mode)
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    if (!comment.trim()) return;
-
-    const newComment: UserComment = {
-      id: Date.now(),
-      text: comment.trim(),
-      rating,
-      date: new Date().toLocaleDateString(),
-    };
-
-    setComments((prev) => [...prev, newComment]);
-    setComment("");
-    setRating(5);
+    if (!comment.trim() || !movie) return;
+    try {
+      const token = (state as any)?.accessToken || localStorage.getItem('accessToken');
+      const res = await fetch(apiPath('/api/reviews'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          movieId: String(movie.id),
+          movieTitle: movie.title,
+          rating,
+          text: comment.trim(),
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to submit review');
+      const data = await res.json();
+      const r = data.review;
+      setComments((prev) => [
+        ...prev,
+        { id: Date.now(), text: r?.text || comment.trim(), rating: r?.rating || rating, date: new Date().toLocaleDateString() },
+      ]);
+      setComment('');
+      setRating(5);
+    } catch (_) {
+      // fallback UI only, keep previous behavior
+      setComments((prev) => [
+        ...prev,
+        { id: Date.now(), text: comment.trim(), rating, date: new Date().toLocaleDateString() },
+      ]);
+      setComment('');
+      setRating(5);
+    }
   };
 
+  // Controlled select for rating
   const handleRatingChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setRating(Number(e.currentTarget.value));
   };
 
+  // Controlled textarea for text
   const handleCommentChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setComment(e.currentTarget.value);
   };
@@ -128,8 +161,7 @@ const MovieDetail: React.FC = () => {
           </div>
         </div>
 
-      {/* Back button below navbar */}
-      <BackButton className="page-back" />
+      <button className="back-button page-back" onClick={() => navigate(-1)}>← Back</button>
 
       {isDetail ? (
         <div className="movie-detail-container" style={{ backgroundImage: isDetail ? `url(${bgUrl})` : "none" }}>
@@ -172,16 +204,17 @@ const MovieDetail: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="categories-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "20px 40px 40px" }}>
-          <h1 style={{ textAlign: "center", color: "#f5c518" }}>Categories</h1>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginTop: "16px" }}>
+        <section className="categories-section">
+          <h2>Categories</h2>
+          <p>Browse the genres available in FilmHub</p>
+          <div className="categories-grid">
             {[...new Set(moviesData.map(m => m.genre))].filter(Boolean).map((g, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.06)", padding: "14px", borderRadius: "10px", textAlign: "center" }}>
-                {g}
+              <div key={i} className="category-card">
+                <span className="category-name">{g}</span>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );

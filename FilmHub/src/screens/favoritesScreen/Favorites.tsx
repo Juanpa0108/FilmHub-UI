@@ -1,5 +1,11 @@
+/**
+ * Favorites screen
+ * - Displays the user's favorite movies fed by FavoritesContext
+ * - Allows removing favorites and navigating to a movie detail
+ * - Shares the global navbar and sticky back button pattern
+ */
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFavorites } from "../../API/favoritesContext";
 import { useAuthContext } from "../../API/authContext";
 import { moviesData } from "../carrouselScreen/movieData";
@@ -7,18 +13,19 @@ import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import { FaUserCircle } from "react-icons/fa";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
-import BackButton from "../../components/BackButton/BackButton";
 import "../carrouselScreen/carrouselScreen.css";
 import "./favorites.css";
 
 const Favorites: React.FC = () => {
   const { favorites, remove } = useFavorites();
+  const navigate = useNavigate();
   const { state } = useAuthContext() as any;
   const user = state?.user;
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
 
+  // Close the user dropdown when clicking outside or pressing Escape
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (!userMenuOpen) return;
@@ -37,11 +44,11 @@ const Favorites: React.FC = () => {
       document.removeEventListener("keydown", handleEsc);
     };
   }, [userMenuOpen]);
-  const favMovies = moviesData.filter((m) => favorites.includes(Number(m.id)));
+  const favMovies = moviesData.filter((m) => favorites.includes(String(m.id)));
 
   return (
     <div className="app-container favorites-wrapper">
-      {/* NAVBAR */}
+  {/* Global navbar */}
       <div className="navbar">
         <div className="brand">
           <Link to="/" className="logo-link">
@@ -102,10 +109,10 @@ const Favorites: React.FC = () => {
         </div>
       </div>
 
-  {/* Back button below navbar */}
-  <BackButton className="page-back" />
+  
 
       <div className="favorites-header">
+        <button className="back-button page-back" onClick={() => navigate(-1)}>← Back</button>
         <h2>My Favorites</h2>
       </div>
       {favMovies.length === 0 ? (
@@ -126,8 +133,8 @@ const Favorites: React.FC = () => {
                 <p className="muted">{m.genre} • {m.year}</p>
               </div>
               <div className="fav-actions">
-                <Link to={`/movie/${m.id}`} className="btn">Open</Link>
-                <button className="btn-outline" onClick={() => remove(Number(m.id))}>Remove</button>
+                <Link to={`/player/${m.id}`} className="action-btn action-open">GO TO MOVIE</Link>
+                <button className="action-btn action-remove" onClick={() => remove(String(m.id))}>Remove</button>
               </div>
             </div>
           ))}

@@ -8,16 +8,19 @@ import MovieCarousel from "../../components/MovieCarrousel/MovieCarrousel";
 import type { Movie } from "../../types/movie";
 
 export default function CarrouselScreen() {
-  // tipamos el dataset (ideal: que movieData lo exporte ya como Movie[])
-  const defaultMovie = moviesData[0] as Movie;
-
+  // Keep the original 5 from movieData intact
+  const movies = moviesData as Movie[];
+  const defaultMovie = movies[0] as Movie;
   const [backgroundImage, setBackgroundImage] = useState<string>(
     `/movie/movie-website-landing-page-images/movies/${defaultMovie.backgroundImage}`
   );
   const [activeMovieId, setActiveMovieId] = useState<Movie["id"]>(defaultMovie.id);
 
   const handleMovieSelect = (bgImage: string, movieId: Movie["id"]) => {
-    setBackgroundImage(`/movie/movie-website-landing-page-images/movies/${bgImage}`);
+    const bg = bgImage.startsWith("http") || bgImage.startsWith("/")
+      ? bgImage
+      : `/movie/movie-website-landing-page-images/movies/${bgImage}`;
+    setBackgroundImage(bg);
     setActiveMovieId(movieId);
   };
 
@@ -43,7 +46,7 @@ export default function CarrouselScreen() {
           /* role="movie-banner"  <-- ❌ (no es prop válida) */
           data-testid="movie-banner"           /* ✅ si lo necesitas para tests */
           backgroundImage={backgroundImage}
-          movies={moviesData as Movie[]}
+          movies={movies}
           activeMovieId={activeMovieId}
           onReviewClick={handleReviewClick}
           onAddToList={handleAddToList}
@@ -51,7 +54,7 @@ export default function CarrouselScreen() {
           <MovieCarousel
             /* role="movie-carousel" <-- ❌ */
             data-testid="movie-carousel"         /* ✅ */
-            movies={moviesData as Movie[]}
+            movies={movies}
             onMovieSelect={handleMovieSelect}
           />
         </MovieBanner>
