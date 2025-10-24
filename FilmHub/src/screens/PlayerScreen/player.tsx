@@ -36,6 +36,9 @@ const PlayerScreen: React.FC = () => {
   const [rating, setRating] = useState<number | "">("");
   const [comments, setComments] = useState<UserComment[]>([]);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
+  const [editRating, setEditRating] = useState<number | "">("");
 
   /**
    * useEffect:
@@ -127,6 +130,43 @@ const PlayerScreen: React.FC = () => {
     } catch { /* ignore */ }
   };
 
+  const beginEdit = (r: UserComment) => {
+    setEditingId(r.id);
+    setEditText(r.text);
+    setEditRating(r.rating);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+    setEditRating("");
+  };
+
+  const saveEdit = async () => {
+    if (!editingId) return;
+    try {
+      const token = state?.accessToken || localStorage.getItem("accessToken");
+      const res = await fetch(apiPath(`/api/reviews/${encodeURIComponent(editingId)}`), {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        credentials: "include",
+        body: JSON.stringify({ text: editText.trim(), ...(editRating !== '' ? { rating: editRating } : {}) }),
+      });
+      if (!res.ok) throw new Error("Failed to update review");
+      const data = await res.json().catch(() => ({}));
+      const upd = (data as any)?.review;
+      setComments((prev) => prev.map((c) => c.id === editingId ? {
+        ...c,
+        text: upd?.text ?? editText,
+        rating: upd?.rating ?? (typeof editRating === 'number' ? editRating : c.rating),
+      } : c));
+      cancelEdit();
+    } catch { /* ignore */ }
+  };
+
   // Prevent rendering while redirecting (avoids flickering)
   if (!isAuthenticated || !movie) return null;
 
@@ -135,6 +175,16 @@ const PlayerScreen: React.FC = () => {
   const avg = count ? comments.reduce((s, c) => s + c.rating, 0) / count : 0;
   const rounded = Math.round(avg);
   const stars = "★".repeat(rounded) + "☆".repeat(5 - rounded);
+
+  // Title image for the details section
+  const IMG_BASE = "/movie/movie-website-landing-page-images/movies/";
+  const titleUrl = movie?.titleImage
+    ? (movie.titleImage.startsWith("http")
+        ? movie.titleImage
+        : movie.titleImage.startsWith("/")
+          ? movie.titleImage
+          : IMG_BASE + movie.titleImage)
+    : undefined;
 
   return (
     <div className="player-container">
@@ -165,7 +215,6 @@ const PlayerScreen: React.FC = () => {
             },
           }}
           controls
-          playing
           width="100%"
           height="100%"
         />
@@ -174,6 +223,9 @@ const PlayerScreen: React.FC = () => {
       {/* Details + comments below the player */}
       <section className="player-detail-section" style={{ padding: "24px 16px", background: "#000" }}>
         <div className="movie-overlay" style={{ maxWidth: 980, margin: "0 auto" }}>
+          {titleUrl && (
+            <img src={titleUrl} alt={movie.alt ?? movie.title} className="movie-title-img" />
+          )}
           <h1 style={{ textAlign: "center", color: "#f1c40f", marginTop: 0 }}>{movie.title}</h1>
           <div className="movie-info">
             <p><strong>Year:</strong> {movie.year ?? "—"}</p>
@@ -230,13 +282,38 @@ const PlayerScreen: React.FC = () => {
               ) : (
                 comments.map((c) => (
                   <div key={c.id} className="comment">
-                    <p className="stars">{"★".repeat(c.rating)}{"☆".repeat(5 - c.rating)}</p>
-                    <p>{c.text}</p>
-                    <small>{c.date}</small>
-                    {c.mine && (
-                      <div className="inline-actions">
-                        <button className="btn btn-dark" onClick={() => handleDelete(c.id)}>Delete</button>
-                      </div>
+                    {editingId === c.id ? (
+                      <>
+                        <div className="rating-stars" aria-label="Edit rating">
+                          {[1,2,3,4,5].map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              className={`rating-star ${((editRating || 0) as number) >= n ? "active" : ""}`}
+                              onClick={() => setEditRating(n)}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                        <textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} />
+                        <div className="inline-actions">
+                          <button className="btn" onClick={saveEdit} disabled={!editText.trim() || editRating === ""}>Save</button>
+                          <button className="btn btn-dark" onClick={cancelEdit}>Cancel</button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="stars">{"★".repeat(c.rating)}{"☆".repeat(5 - c.rating)}</p>
+                        <p>{c.text}</p>
+                        <small>{c.date}</small>
+                        {c.mine && (
+                          <div className="inline-actions">
+                            <button className="btn" onClick={() => beginEdit(c)}>Edit</button>
+                            <button className="btn btn-dark" onClick={() => handleDelete(c.id)}>Delete</button>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 ))
