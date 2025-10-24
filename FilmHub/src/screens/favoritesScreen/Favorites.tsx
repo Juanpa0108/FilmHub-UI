@@ -133,7 +133,7 @@ const Favorites: React.FC = () => {
                 <p className="muted">{m.genre} • {m.year}</p>
               </div>
               <div className="fav-actions">
-                <Link to={`/movie/${m.id}`} className="action-btn action-open">OPEN</Link>
+                <Link to={`/player/${m.id}`} className="action-btn action-open">GO TO MOVIE</Link>
                 <button className="action-btn action-remove" onClick={() => remove(String(m.id))}>Remove</button>
               </div>
             </div>

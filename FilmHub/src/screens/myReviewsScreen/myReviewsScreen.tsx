@@ -246,7 +246,8 @@ const MyReviewsScreen: React.FC = () => {
                       <p className="rating">⭐ {review.rating}/5</p>
                       <p className="comment">"{review.text}"</p>
                       <p className="author">{new Date(review.createdAt).toLocaleDateString()}</p>
-                      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                      <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
+                        <Link className="btn" to={`/player/${review.movieId}`}>Go to Movie</Link>
                         <button className="btn" onClick={() => beginEdit(review)}>Edit</button>
                         <button className="btn" onClick={() => handleDelete(review.id)}>Delete</button>
                       </div>
