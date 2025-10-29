@@ -250,21 +250,6 @@ h2 {
   width: 100%;
 }
 
-.google {
-  background: #db4437;
-  color: white;
-}
-
-.github {
-  background: #0f0f14;
-  color: white;
-}
-
-.twitter {
-  background: #1da1f2;
-  color: white;
-}
-
 .icon-btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);

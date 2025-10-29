@@ -219,21 +219,7 @@ const Login: React.FC = () => {
             </p>
           </div>
 
-          {/* Social login options */}
-          <div className="social-login">
-            <p>Or sign in with</p>
-            <div className="social-icons" role="group" aria-label="Social sign-in">
-              <button className="icon-btn google" type="button" aria-label="Sign in with Google">
-                <FaGoogle />
-              </button>
-              <button className="icon-btn github" type="button" aria-label="Sign in with GitHub">
-                <FaGithub />
-              </button>
-              <button className="icon-btn twitter" type="button" aria-label="Sign in with Twitter/X">
-                <FaTwitter />
-              </button>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>
