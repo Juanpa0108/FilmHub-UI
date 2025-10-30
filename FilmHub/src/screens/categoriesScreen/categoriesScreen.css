@@ -161,3 +161,6 @@
 
 /* === Botón de retroceso fijo (Back) === */
 /* back-button styles are centralized in src/index.css to ensure consistent appearance across pages. */
+
+/* 📱 Menús desplegables en móvil (navbar): fijos debajo de la barra, alineados a la derecha */
+/* overlay rules centralized in src/styles/navbar.css for consistency */

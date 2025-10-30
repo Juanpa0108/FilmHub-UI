@@ -1,0 +1,30 @@
+/* Global overlay styles for navbar dropdowns rendered via portal */
+
+@media (max-width: 768px) {
+  .nav-overlay {
+    position: fixed;
+    top: 72px; /* default; overridden inline when anchored */
+    right: 12px; /* default; overridden inline when anchored */
+    left: auto;
+    transform: none;
+    width: min(80vw, 240px);
+    max-height: 44vh;
+    overflow: auto;
+    background: rgba(10,10,15,0.98);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+    z-index: 2147483647; /* above any page element */
+    pointer-events: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* compact items inside */
+  .nav-overlay a,
+  .nav-overlay .user-item {
+    padding: 9px 10px;
+    font-size: 12.5px;
+    display: block;
+  }
+}

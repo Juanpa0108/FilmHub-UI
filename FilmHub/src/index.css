@@ -1,4 +1,5 @@
 @import "./styles/navbar.css";
+@import "./styles/overlay.css";
 
 :root {
   --bg: #0c0c0b;        /* fondo negro exacto del logo */

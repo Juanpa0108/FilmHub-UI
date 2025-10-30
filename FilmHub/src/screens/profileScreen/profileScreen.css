@@ -271,3 +271,62 @@ body {
   .profile-form input { padding: 11px; }
   .btn { padding: 9px 11px; }
 }
+
+/* === MENÚ DESPLEGABLE DEL PERFIL === */
+.profile-dropdown {
+  position: absolute;
+  top: 100%; /* justo debajo del icono */
+  right: 0;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  width: 180px;
+  padding: 12px 0;
+  z-index: 9999; /* asegúrate que esté sobre todo */
+  display: none; /* se muestra al hacer hover o clic */
+}
+
+.profile-dropdown.active {
+  display: block;
+}
+
+.profile-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  background: rgba(20, 20, 20, 0.95);
+  transform: rotate(45deg);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Estilo de cada ítem del menú */
+.profile-dropdown-item {
+  padding: 10px 16px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.profile-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* === CONTENEDOR DEL ICONO Y MENÚ === */
+.profile-icon-container {
+  position: relative; /* importante para que el menú se posicione respecto a este */
+  display: inline-block;
+}
+
+/* === Ajustes responsive === */
+@media (max-width: 768px) {
+  .profile-dropdown {
+    right: 10px;
+    width: 160px;
+  }
+}

@@ -24,6 +24,7 @@ import { moviesData } from "../carrouselScreen/movieData";
 import { Movie } from "../../types/movie";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import Searchbar from "../../components/SearchBar/Searchbar";
+import OverlayPortal from "../../components/OverlayPortal/OverlayPortal";
 import { useAuthContext } from "../../API/authContext";
 import { FaUserCircle } from "react-icons/fa";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
@@ -68,7 +69,11 @@ const MovieDetail: React.FC = () => {
   const user = state?.user;
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
+  const [userPos, setUserPos] = useState<{ top: number; right: number } | null>(null);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
+  const menuBtnRef = useRef<HTMLButtonElement | null>(null);
+  const userBtnRef = useRef<HTMLButtonElement | null>(null);
 
   /**
    * Handles closing of user dropdown menu when clicking outside
@@ -76,9 +81,11 @@ const MovieDetail: React.FC = () => {
    */
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Element | null;
+      if (target && target.closest && target.closest('.nav-overlay')) return;
       if (!userMenuOpen) return;
-      const target = e.target as Node | null;
-      if (userMenuRef.current && target && !userMenuRef.current.contains(target)) {
+      const node = target as Node | null;
+      if (userMenuRef.current && node && !userMenuRef.current.contains(node)) {
         setUserMenuOpen(false);
       }
     }
@@ -92,6 +99,35 @@ const MovieDetail: React.FC = () => {
       document.removeEventListener("keydown", handleEsc);
     };
   }, [userMenuOpen]);
+
+  // Calculate overlay positions relative to trigger buttons when opened
+  useEffect(() => {
+    const calcRight = (rect: DOMRect) => Math.max(8, window.innerWidth - rect.right);
+    if (menuAbierto && menuBtnRef.current) {
+      const r = menuBtnRef.current.getBoundingClientRect();
+      setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+    } else {
+      setMenuPos(null);
+    }
+    if (userMenuOpen && userBtnRef.current) {
+      const r = userBtnRef.current.getBoundingClientRect();
+      setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+    } else {
+      setUserPos(null);
+    }
+    function onResize() {
+      if (menuAbierto && menuBtnRef.current) {
+        const r = menuBtnRef.current.getBoundingClientRect();
+        setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+      }
+      if (userMenuOpen && userBtnRef.current) {
+        const r = userBtnRef.current.getBoundingClientRect();
+        setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+      }
+    }
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [menuAbierto, userMenuOpen]);
 
   // ------------------------------
   // 📺 MOVIE DETAIL VIEW STATE
@@ -186,15 +222,15 @@ const MovieDetail: React.FC = () => {
 
           {/* ☰ Main menu */}
           <div className="menu-container">
-            <button className="menu-button" onClick={() => setMenuAbierto(!menuAbierto)}>
+            <button className="menu-button" ref={menuBtnRef} onClick={() => setMenuAbierto(!menuAbierto)}>
               ☰
             </button>
             {menuAbierto && (
-              <div className="dropdown-menu">
+              <OverlayPortal className="dropdown-menu nav-overlay" style={menuPos ?? undefined}>
                 <Link to="/categories">Categories</Link>
                 <Link to="/my-reviews">My Reviews</Link>
                 <Link to="/favorites">Favorites</Link>
-              </div>
+              </OverlayPortal>
             )}
           </div>
 
@@ -209,6 +245,7 @@ const MovieDetail: React.FC = () => {
               <div className="user-menu" ref={userMenuRef}>
                 <button
                   className="user-avatar"
+                  ref={userBtnRef}
                   onClick={() => setUserMenuOpen((v) => !v)}
                   aria-haspopup="menu"
                   aria-expanded={userMenuOpen}
@@ -218,7 +255,7 @@ const MovieDetail: React.FC = () => {
                 </button>
 
                 {userMenuOpen && (
-                  <div className="user-dropdown" role="menu">
+                  <OverlayPortal className="user-dropdown nav-overlay" role="menu" style={userPos ?? undefined}>
                     <div className="user-header">
                       {user?.firstName || user?.username || user?.email}
                     </div>
@@ -233,7 +270,7 @@ const MovieDetail: React.FC = () => {
                     <div className="user-item" role="menuitem">
                       <LogoutButton />
                     </div>
-                  </div>
+                  </OverlayPortal>
                 )}
               </div>
             )}
