@@ -338,7 +338,7 @@ body {
     flex-wrap: nowrap;
     width: 100%;
     max-width: 100%;
-    overflow: hidden; /* 🔥 fuerza ajuste interno */
+    overflow: visible; /* permite que los menús sobresalgan sin cortarse */
   }
 
   /* --- Logo --- */
@@ -376,15 +376,6 @@ body {
   .user-avatar {
     font-size: 20px !important;
     padding: 6px;
-  }
-
-  /* --- Evitar que los dropdowns cambien tamaño del header --- */
-  .dropdown-menu,
-  .user-dropdown {
-    position: absolute;
-    top: 50px;
-    right: 10px;
-    z-index: 1000;
   }
 }
 
@@ -439,52 +430,6 @@ body {
     height: auto;
   }
 }
-@media (max-width: 600px) {
-  .navbar .brand .logo {
-    height: 65px; /* 👈 más grande pero mantiene proporción */
-    max-width: none;
-  }
-}
-@media (max-width: 768px) {
-  .dropdown-menu {
-    position: fixed !important;
-    top: 70px !important;  /* justo debajo del header */
-    right: 10px;
-    background: rgba(0, 0, 0, 0.95);
-    border-radius: 10px;
-    padding: 10px;
-    width: 180px;
-    z-index: 9999 !important;
-  }
-
-  .dropdown-menu a {
-    display: block;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  .user-dropdown {
-    position: fixed !important;
-    top: 70px !important;
-    right: 10px !important;
-    background: rgba(0, 0, 0, 0.95);
-    width: 180px;
-    border-radius: 10px;
-    padding: 8px 0;
-    z-index: 9999 !important;
-  }
-
-  .user-dropdown .user-item,
-  .user-dropdown .user-header {
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .user-dropdown .user-item:last-child {
-    border-bottom: none;
-  }
-}
+/* keep other page responsive rules below */
+/* 📱 Menús desplegables en móvil: fijos debajo de la navbar (evita que se corten) */
+/* overlay rules centralized in src/styles/navbar.css for consistency */

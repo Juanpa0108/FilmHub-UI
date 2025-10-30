@@ -40,11 +40,11 @@ import { useAuthContext } from "../../API/authContext";
 
 // Components
 import CarruselInfinito from "../../components/Carrusel/carruselInfinito";
-import Carrusel from "../../components/Carrusel/carrusel";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import CarrouselScreen from "../carrouselScreen/carrouselScreen";
 import ResultsScreen from "../resultsScreen/resultsScreen";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import OverlayPortal from "../../components/OverlayPortal/OverlayPortal";
 import { FaUserCircle } from "react-icons/fa";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
 
@@ -59,11 +59,15 @@ const Principal: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
+  const [userPos, setUserPos] = useState<{ top: number; right: number } | null>(null);
   const [authTick, setAuthTick] = useState(0);
 
   // Refs for click-outside detection
   const userMenuRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuBtnRef = useRef<HTMLButtonElement | null>(null);
+  const userBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const { state } = useAuthContext();
   const user = state?.user;
@@ -74,6 +78,11 @@ const Principal: React.FC = () => {
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node | null;
+
+      // If click happens inside a portal overlay, do nothing
+      if (target && (target as Element).closest && (target as Element).closest('.nav-overlay')) {
+        return;
+      }
 
       // User menu
       if (userMenuOpen && userMenuRef.current && target && !userMenuRef.current.contains(target)) {
@@ -100,6 +109,38 @@ const Principal: React.FC = () => {
       document.removeEventListener("keydown", handleEsc);
     };
   }, [userMenuOpen, menuAbierto]);
+
+  // Calculate and set overlay positions anchored to buttons when opened
+  useEffect(() => {
+    function calcRight(rect: DOMRect) {
+      return Math.max(8, window.innerWidth - rect.right);
+    }
+    if (menuAbierto && menuBtnRef.current) {
+      const r = menuBtnRef.current.getBoundingClientRect();
+      setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+    } else {
+      setMenuPos(null);
+    }
+    if (userMenuOpen && userBtnRef.current) {
+      const r = userBtnRef.current.getBoundingClientRect();
+      setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+    } else {
+      setUserPos(null);
+    }
+    // Recalculate on resize to keep it near the button width-wise
+    function onResize() {
+      if (menuAbierto && menuBtnRef.current) {
+        const r = menuBtnRef.current.getBoundingClientRect();
+        setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+      }
+      if (userMenuOpen && userBtnRef.current) {
+        const r = userBtnRef.current.getBoundingClientRect();
+        setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+      }
+    }
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [menuAbierto, userMenuOpen]);
 
   // ------------------------
   // 🔁 Auth State Sync (refresh on context change)
@@ -147,11 +188,11 @@ const Principal: React.FC = () => {
 
           {/* General Menu */}
           <div className="menu-container" ref={menuRef}>
-            <button className="menu-button" onClick={() => setMenuAbierto(!menuAbierto)}>
+            <button className="menu-button" ref={menuBtnRef} onClick={() => setMenuAbierto(!menuAbierto)}>
               ☰
             </button>
             {menuAbierto && (
-              <div className="dropdown-menu">
+              <OverlayPortal className="dropdown-menu nav-overlay" style={menuPos ?? undefined}>
                 <Link to="/categories" onClick={() => setMenuAbierto(false)}>
                   Categories
                 </Link>
@@ -161,7 +202,7 @@ const Principal: React.FC = () => {
                 <Link to="/favorites" onClick={() => setMenuAbierto(false)}>
                   Favorites
                 </Link>
-              </div>
+              </OverlayPortal>
             )}
           </div>
 
@@ -176,6 +217,7 @@ const Principal: React.FC = () => {
               <div className="user-menu" ref={userMenuRef}>
                 <button
                   className="user-avatar"
+                  ref={userBtnRef}
                   onClick={() => setUserMenuOpen((v) => !v)}
                   aria-haspopup="menu"
                   aria-expanded={userMenuOpen}
@@ -184,7 +226,7 @@ const Principal: React.FC = () => {
                   <FaUserCircle />
                 </button>
                 {userMenuOpen && (
-                  <div className="user-dropdown" role="menu">
+                  <OverlayPortal className="user-dropdown nav-overlay" role="menu" style={userPos ?? undefined}>
                     <div className="user-header">
                       {user?.firstName || user?.username || user?.email}
                     </div>
@@ -199,7 +241,7 @@ const Principal: React.FC = () => {
                     <div className="user-item" role="menuitem">
                       <LogoutButton />
                     </div>
-                  </div>
+                  </OverlayPortal>
                 )}
               </div>
             )}
@@ -214,10 +256,6 @@ const Principal: React.FC = () => {
 
       <div className="carrusel-banner">
         <CarruselInfinito images={images} />
-      </div>
-
-      <div className="static-carousel-container">
-        <Carrusel />
       </div>
 
       {/* Search Results Section */}
