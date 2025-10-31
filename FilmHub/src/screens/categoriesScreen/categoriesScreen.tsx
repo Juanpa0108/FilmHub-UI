@@ -69,8 +69,8 @@ const MovieDetail: React.FC = () => {
   const user = state?.user;
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
-  const [userPos, setUserPos] = useState<{ top: number; right: number } | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
+  const [userPos, setUserPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
   const menuBtnRef = useRef<HTMLButtonElement | null>(null);
   const userBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -100,33 +100,61 @@ const MovieDetail: React.FC = () => {
     };
   }, [userMenuOpen]);
 
-  // Calculate overlay positions relative to trigger buttons when opened
+  // Calculate overlay positions relative to trigger buttons when opened (flip + rAF)
   useEffect(() => {
     const calcRight = (rect: DOMRect) => Math.max(8, window.innerWidth - rect.right);
+    function placeBelowOrAbove(rect: DOMRect): { top?: number; bottom?: number; right: number } {
+      const right = Math.round(calcRight(rect));
+      const spaceBelow = window.innerHeight - rect.bottom - 8;
+      const estimatedMenuH = 220;
+      const NAVBAR_H = 70; const MIN_TOP = NAVBAR_H + 6;
+      if (spaceBelow < estimatedMenuH) {
+        return { bottom: Math.round(window.innerHeight - rect.top + 8), right };
+      }
+      const belowTop = Math.round(rect.bottom + 8);
+      return { top: Math.max(belowTop, MIN_TOP), right };
+    }
+
     if (menuAbierto && menuBtnRef.current) {
       const r = menuBtnRef.current.getBoundingClientRect();
-      setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
-    } else {
-      setMenuPos(null);
-    }
+      setMenuPos(placeBelowOrAbove(r));
+    } else { setMenuPos(null); }
     if (userMenuOpen && userBtnRef.current) {
       const r = userBtnRef.current.getBoundingClientRect();
-      setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
-    } else {
-      setUserPos(null);
+      setUserPos(placeBelowOrAbove(r));
+    } else { setUserPos(null); }
+
+    function shallowEqualPos(a: { top?: number; bottom?: number; right: number } | null, b: { top?: number; bottom?: number; right: number } | null) {
+      if (!a || !b) return a === b;
+      const topA = a.top ?? -99999, topB = b.top ?? -99999; const botA = a.bottom ?? -99999, botB = b.bottom ?? -99999;
+      return Math.abs(topA - topB) < 0.5 && Math.abs(botA - botB) < 0.5 && Math.abs(a.right - b.right) < 0.5;
     }
-    function onResize() {
-      if (menuAbierto && menuBtnRef.current) {
+    function updatePositions(){
+      if (menuAbierto && menuBtnRef.current){
         const r = menuBtnRef.current.getBoundingClientRect();
-        setMenuPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+        const next = placeBelowOrAbove(r);
+        setMenuPos(prev => shallowEqualPos(prev, next) ? prev : next);
       }
-      if (userMenuOpen && userBtnRef.current) {
+      if (userMenuOpen && userBtnRef.current){
         const r = userBtnRef.current.getBoundingClientRect();
-        setUserPos({ top: Math.round(r.bottom + 8), right: Math.round(calcRight(r)) });
+        const next = placeBelowOrAbove(r);
+        setUserPos(prev => shallowEqualPos(prev, next) ? prev : next);
       }
     }
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    const onResize = () => updatePositions();
+    const onScroll = () => updatePositions();
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    let rafId: number | null = null;
+    if (menuAbierto || userMenuOpen) {
+      const loop = () => { updatePositions(); rafId = requestAnimationFrame(loop); };
+      rafId = requestAnimationFrame(loop);
+    }
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    }
   }, [menuAbierto, userMenuOpen]);
 
   // ------------------------------
@@ -222,14 +250,37 @@ const MovieDetail: React.FC = () => {
 
           {/* ☰ Main menu */}
           <div className="menu-container">
-            <button className="menu-button" ref={menuBtnRef} onClick={() => setMenuAbierto(!menuAbierto)}>
+            <button className="menu-button" ref={menuBtnRef} onClick={() => {
+              if (!menuAbierto && menuBtnRef.current) {
+                const r = menuBtnRef.current.getBoundingClientRect();
+                const right = Math.max(8, window.innerWidth - r.right);
+                const spaceBelow = window.innerHeight - r.bottom - 8;
+                const estimatedMenuH = 220;
+                const pos = spaceBelow < estimatedMenuH
+                  ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+                  : { top: Math.round(r.bottom + 8), right: Math.round(right) };
+                setMenuPos(pos);
+                setMenuAbierto(true);
+              } else {
+                setMenuAbierto(false);
+              }
+            }}>
               ☰
             </button>
             {menuAbierto && (
-              <OverlayPortal className="dropdown-menu nav-overlay" style={menuPos ?? undefined}>
-                <Link to="/categories">Categories</Link>
-                <Link to="/my-reviews">My Reviews</Link>
-                <Link to="/favorites">Favorites</Link>
+              <OverlayPortal className="user-dropdown nav-overlay" style={menuPos ?? undefined}>
+                {user ? (
+                  <>
+                    <Link to="/categories">Categories</Link>
+                    <Link to="/my-reviews">My Reviews</Link>
+                    <Link to="/favorites">Favorites</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
               </OverlayPortal>
             )}
           </div>
@@ -246,7 +297,22 @@ const MovieDetail: React.FC = () => {
                 <button
                   className="user-avatar"
                   ref={userBtnRef}
-                  onClick={() => setUserMenuOpen((v) => !v)}
+                  onClick={() => {
+                    setUserMenuOpen((v) => {
+                      const next = !v;
+                      if (next && userBtnRef.current) {
+                        const r = userBtnRef.current.getBoundingClientRect();
+                        const right = Math.max(8, window.innerWidth - r.right);
+                        const spaceBelow = window.innerHeight - r.bottom - 8;
+                        const estimatedMenuH = 220;
+                        const pos = spaceBelow < estimatedMenuH
+                          ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+                          : { top: Math.round(r.bottom + 8), right: Math.round(right) };
+                        setUserPos(pos);
+                      }
+                      return next;
+                    });
+                  }}
                   aria-haspopup="menu"
                   aria-expanded={userMenuOpen}
                   title={user?.username || user?.email}
