@@ -22,6 +22,7 @@ import Contact from "./screens/static/Contact";
 import Terms from "./screens/static/Terms";
 import Privacy from "./screens/static/Privacy";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import ResetPassword from "./screens/resetPassword/resetPassword";
 
 // Footer component extracted to access auth context cleanly
 function AppFooter() {
@@ -81,6 +82,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/categories/:genre" element={<CategoryResults />} />
           <Route path="/player/:id" element={<PlayerScreen />} />
           <Route path="/movie/:id" element={<MovieDetail />} /> 
+          <Route path="/resetPassword" element={<ResetPassword />} />
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
