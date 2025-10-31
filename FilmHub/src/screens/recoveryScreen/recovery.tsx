@@ -3,42 +3,44 @@
  * -----------------------
  * Password recovery page component.
  * Allows the user to input their email address
- * and simulates sending a password recovery link.
+ * and sends a password recovery request to the backend.
  */
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import "./recovery.css";
+import { apiPath } from "../../config/env";
+
 
 const Recovery: React.FC = () => {
   // State variables
-  const [email, setEmail] = useState<string>(""); // Stores the user's email input
-  const [message, setMessage] = useState<string>(""); // Success message
-  const [error, setError] = useState<string>(""); // Error message
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  
+  const navigate = useNavigate();
 
   /**
    * Handles email input changes.
-   * Clears the error if the email becomes valid
-   * and removes success message when editing again.
    */
   const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
 
-    // Clear error only if the new email looks valid
     if (error && newEmail.includes("@") && newEmail.includes(".")) {
       setError("");
     }
 
-    // Clear success message when user edits the email again
     if (message) setMessage("");
   };
 
   /**
    * Handles form submission.
-   * Validates the email and shows success or error messages.
+   * Sends request to backend and redirects on success.
    */
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     // Basic email validation
@@ -48,9 +50,40 @@ const Recovery: React.FC = () => {
       return;
     }
 
-    // Simulate sending recovery link
+    setLoading(true);
     setError("");
-    setMessage("If the email is registered, you will receive a recovery link.");
+    setMessage("");
+
+    try {
+      const response = await fetch(
+         apiPath(`forgot-password`),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Redirect to reset password page with user ID
+        if (data.id || data.userId) {
+          navigate(`/resetPassword?id=${data.id || data.userId}`);
+        } else {
+          setMessage("Recovery link sent successfully!");
+        }
+      } else {
+        setError(data.message || "Failed to send recovery link.");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again later.");
+      console.error("Recovery error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +92,6 @@ const Recovery: React.FC = () => {
       <p>Enter your email to receive a recovery link.</p>
 
       <form onSubmit={handleSubmit}>
-        {/* Email input with icon */}
         <div className="input-container">
           <FiMail className="icon" />
           <input
@@ -68,14 +100,15 @@ const Recovery: React.FC = () => {
             value={email}
             onChange={handleEmailChange}
             required
+            disabled={loading}
           />
         </div>
 
-        {/* Submit button */}
-        <button type="submit">Send Link</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Sending..." : "Send Link"}
+        </button>
       </form>
 
-      {/* Error and success messages */}
       {error && <p className="error">{error}</p>}
       {message && <p className="message">{message}</p>}
     </div>
