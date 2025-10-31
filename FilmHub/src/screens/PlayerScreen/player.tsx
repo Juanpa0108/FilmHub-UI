@@ -9,7 +9,14 @@ import { apiPath } from "../../config/env";
 import "./PlayerScreen.css";
 import "../movieDetail/movieDetail.css";
 
-type UserComment = { id: string; text: string; rating: number; date: string; mine?: boolean };
+type UserComment = {
+  id: string;
+  text: string;
+  rating: number;
+  date: string;
+  mine?: boolean;
+  userName?: string; // ✅ Añadido para mostrar el nombre
+};
 
 const PlayerScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,7 +40,7 @@ const PlayerScreen: React.FC = () => {
     else if (!movie) navigate("/", { replace: true });
   }, [isAuthenticated, movie, navigate]);
 
-  // ✅ Cargar reseñas
+  // ✅ Cargar reseñas (con nombre del usuario)
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -43,14 +50,25 @@ const PlayerScreen: React.FC = () => {
           credentials: "include",
         });
         const data = await res.json();
+
         const tokenUserId = (state as any)?.user?.id ? String((state as any).user.id) : undefined;
+
         const items: UserComment[] = (data.reviews || []).map((r: any) => ({
           id: r._id,
           text: r.text,
           rating: r.rating,
-          date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : new Date().toLocaleDateString(),
-          mine: tokenUserId ? String(r.user) === tokenUserId : false,
+          date: r.createdAt
+            ? new Date(r.createdAt).toLocaleDateString()
+            : new Date().toLocaleDateString(),
+          mine: tokenUserId
+            ? String(r.user?._id || r.user) === tokenUserId
+            : false,
+          // ✅ Mostrar nombre del usuario
+          userName: r.user?.firstName
+            ? `${r.user.firstName} ${r.user.lastName || ""}`.trim()
+            : "Usuario desconocido",
         }));
+
         if (mounted) setComments(items);
       } catch (err) {
         console.warn("Failed to load reviews", err);
@@ -64,7 +82,9 @@ const PlayerScreen: React.FC = () => {
   // ✅ Enviar reseña
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    if (!comment.trim() || !movie || rating === "" || (typeof rating === "number" && (rating < 1 || rating > 5))) return;
+    if (!comment.trim() || !movie || rating === "" || (typeof rating === "number" && (rating < 1 || rating > 5)))
+      return;
+
     try {
       const token = state?.accessToken || localStorage.getItem("accessToken");
       const res = await fetch(apiPath("/api/reviews"), {
@@ -81,16 +101,23 @@ const PlayerScreen: React.FC = () => {
           text: comment.trim(),
         }),
       });
+
       if (!res.ok) throw new Error("Failed to submit review");
       const data = await res.json();
       const created = data?.review;
+
       const newComment: UserComment = {
         id: created?._id || String(Date.now()),
         text: created?.text || comment.trim(),
         rating: created?.rating || (typeof rating === "number" ? rating : 0),
-        date: created?.createdAt ? new Date(created.createdAt).toLocaleDateString() : new Date().toLocaleDateString(),
+        date: created?.createdAt
+          ? new Date(created.createdAt).toLocaleDateString()
+          : new Date().toLocaleDateString(),
         mine: true,
+        // ✅ Agregar nombre del usuario actual
+        userName: `${state?.user?.firstName ?? "Tú"} ${state?.user?.lastName ?? ""}`.trim(),
       };
+
       setComments((prev) => [...prev, newComment]);
       setComment("");
       setRating("");
@@ -99,12 +126,11 @@ const PlayerScreen: React.FC = () => {
     }
   };
 
-  // ✅ Subtítulos funcionales (sin error TS y activación correcta)
+  // ✅ Subtítulos funcionales
   const injectSubtitles = async (lang: string) => {
     const video = document.querySelector("video");
     if (!video) return console.warn("No video element found");
 
-    // Limpia subtítulos previos
     video.querySelectorAll("track[data-injected]").forEach((t) => t.remove());
 
     if (lang === "none") {
@@ -169,7 +195,9 @@ const PlayerScreen: React.FC = () => {
       <TopBar />
 
       <div className="player-wrapper full-cover">
-        <button className="back-button" onClick={() => navigate(-1)}>← Back</button>
+        <button className="back-button" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
 
         <ReactPlayer
           ref={playerRef}
@@ -184,7 +212,7 @@ const PlayerScreen: React.FC = () => {
           onReady={onPlayerReady}
         />
 
-        {/* ✅ Botones de subtítulos visibles */}
+        {/* ✅ Botones de subtítulos */}
         <div className="subtitle-buttons">
           {movie?.subtitlesEs && (
             <button
@@ -276,6 +304,10 @@ const PlayerScreen: React.FC = () => {
                 comments.map((c) => (
                   <div key={c.id} className="comment">
                     <p className="stars">{"★".repeat(c.rating)}{"☆".repeat(5 - c.rating)}</p>
+                    <p>
+  <strong style={{ color: "#FFD700" }}>{c.userName}</strong>
+</p>
+
                     <p>{c.text}</p>
                     <small>{c.date}</small>
                   </div>
