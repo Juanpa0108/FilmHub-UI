@@ -1,4 +1,4 @@
-// 1. movieData.js
+  // movieData.ts
 export const moviesData = [
   {
     id: "the-little-mermaid",
@@ -7,12 +7,16 @@ export const moviesData = [
     rating: "12+",
     duration: "2h 14min",
     genre: "Romance",
-    description: "The youngest daughter of King Triton, Ariel, is a rebellious mermaid princess fascinated with the human world. After saving Prince Eric from a shipwreck, she falls deeply in love with him. Despite her father's warnings about humans, Ariel makes a dangerous deal with the sea witch Ursula to become human for three days in exchange for her voice.",
+    description:
+      "The youngest daughter of King Triton, Ariel, is a rebellious mermaid princess fascinated with the human world. After saving Prince Eric from a shipwreck, she falls deeply in love with him. Despite her father's warnings about humans, Ariel makes a dangerous deal with the sea witch Ursula to become human for three days in exchange for her voice.",
     titleImage: "/movie/movie-website-landing-page-images/the-little-mermaid-title.png",
     backgroundImage: "bg-little-mermaid.jpg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-little-mermaid.jpeg",
     alt: "The Little Mermaid",
-    videoUrl: "https://www.youtube.com/watch?v=kpGo2_d3oYE&list=RDkpGo2_d3oYE&start_radio=1"
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761877251/The_Little_Mermaid_kwk6qy.mp4",
+    subtitlesEn: "/subtitles/The_Little_Mermaid.vtt",
+    subtitlesEs: "/subtitles/The_Little_Mermaid-ESP.vtt",
   },
   {
     id: "65",
@@ -21,12 +25,16 @@ export const moviesData = [
     rating: "12+",
     duration: "1h 33min",
     genre: "Thriller",
-    description: "After a catastrophic crash on an unknown planet, pilot Mills quickly discovers he's stranded on Earth... 65 million years ago. Now, with only one chance at rescue, Mills and the sole other survivor, Koa, must traverse an unknown terrain riddled with dangerous prehistoric creatures in an epic fight to survive.",
+    description:
+      "After a catastrophic crash on an unknown planet, pilot Mills quickly discovers he's stranded on Earth... 65 million years ago. Now, with only one chance at rescue, Mills and the sole other survivor, Koa, must traverse an unknown terrain riddled with dangerous prehistoric creatures in an epic fight to survive.",
     titleImage: "/movie/movie-website-landing-page-images/the-65-title.png",
     backgroundImage: "bg-65.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/65.jpg",
     alt: "65",
-    videoUrl: "https://www.youtube.com/watch?v=bHXejJq5vr0"
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761877242/65_j4f4sw.mp4",
+    subtitlesEn: "/subtitles/65.vtt",
+    subtitlesEs: "/subtitles/65-ESP.vtt",
   },
   {
     id: "the-covenant",
@@ -35,12 +43,16 @@ export const moviesData = [
     rating: "12+",
     duration: "2h 03min",
     genre: "Action",
-    description: "During his last tour of duty in Afghanistan, Sergeant John Kinley is paired with local interpreter Ahmed to survey the region. When their unit is ambushed on patrol, Kinley and Ahmed are the only survivors. With enemy combatants in pursuit, Ahmed risks his own life to carry an injured Kinley across miles of grueling terrain to safety. Back on U.S. soil, Kinley learns that Ahmed and his family were not given passage to America as promised.",
+    description:
+      "During his last tour of duty in Afghanistan, Sergeant John Kinley is paired with local interpreter Ahmed to survey the region. When their unit is ambushed on patrol, Kinley and Ahmed are the only survivors. With enemy combatants in pursuit, Ahmed risks his own life to carry an injured Kinley across miles of grueling terrain to safety. Back on U.S. soil, Kinley learns that Ahmed and his family were not given passage to America as promised.",
     titleImage: "/movie/movie-website-landing-page-images/the-covenant-title.png",
     backgroundImage: "bg-the-covenant.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-covenant.jpg",
     alt: "The Covenant",
-    videoUrl: "https://www.youtube.com/watch?v=PEiMg5RCDgk"
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761877236/The_Covenant_qxuxfg.mp4",
+    subtitlesEn: "/subtitles/The_Covenant.vtt",
+    subtitlesEs: "/subtitles/The_Covenant-ESP.vtt",
   },
   {
     id: "the-black-demon",
@@ -49,12 +61,16 @@ export const moviesData = [
     rating: "12+",
     duration: "1h 40min",
     genre: "Horror",
-    description: "Oilman Paul Sturges takes his family on a vacation to Bahia Azul. There, they encounter a ferocious megalodon shark known as the Black Demon. Stranded on a decaying oil rig, Paul and his family must find a way to return to shore alive before it strikes again.",
+    description:
+      "Oilman Paul Sturges takes his family on a vacation to Bahia Azul. There, they encounter a ferocious megalodon shark known as the Black Demon. Stranded on a decaying oil rig, Paul and his family must find a way to return to shore alive before it strikes again.",
     titleImage: "/movie/movie-website-landing-page-images/the-black-demon-title.png",
     backgroundImage: "bg-the-black-demon.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-black-demon.jpg",
     alt: "The Black Demon",
-    videoUrl: "https://www.youtube.com/watch?v=z1xJAyVKAPY"
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761877247/The_Black_Demon_hw6pe0.mp4",
+    subtitlesEn: "/subtitles/The_Black_Demon.vtt",
+    subtitlesEs: "/subtitles/The_Black_Demon-ESP.vtt",
   },
   {
     id: "the-tank",
@@ -63,11 +79,145 @@ export const moviesData = [
     rating: "12+",
     duration: "1h 40min",
     genre: "Thriller",
-    description: "After inheriting a mysterious abandoned property, a family accidentally unleashes a long-dormant creature that terrorized the local area, including their ancestors, for generations.",
+    description:
+      "After inheriting a mysterious abandoned property, a family accidentally unleashes a long-dormant creature that terrorized the local area, including their ancestors, for generations.",
     titleImage: "/movie/movie-website-landing-page-images/the-tank-title.png",
     backgroundImage: "bg-the-tank.jpeg",
     thumbnailImage: "/movie/movie-website-landing-page-images/movies/the-tank.jpeg",
     alt: "The Tank",
-    videoUrl: "https://www.youtube.com/watch?v=23GmhsmrCIo"
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761877232/The_Tank_mh4bot.mp4",
+    subtitlesEn: "/subtitles/The_Tank.vtt",
+    subtitlesEs: "/subtitles/The_Tank-ESP.vtt",
   },
+  {
+    id: "back-to-the-future",
+    title: "Back to the Future",
+    year: "1985",
+    rating: "PG",
+    duration: "1h 56min",
+    genre: "Adventure",
+    description:
+      "Marty McFly, a teenager accidentally sent thirty years into the past, must make sure his high school–aged parents fall in love in order to return to the future.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761850168/Back_To_The_Future_1985_e9iukm.mp4",
+    subtitlesEn: "/subtitles/Back_To_The Future (1985)ENG.vtt",
+    subtitlesEs: "/subtitles/Back To The Future (1985)ESP.vtt",
+  },
+  {
+    id: "dune-trailer",
+    title: "Dune",
+    year: "2021",
+    rating: "PG-13",
+    duration: "2h 35min",
+    genre: "Sci-Fi",
+    description:
+      "Paul Atreides, a brilliant and gifted young man, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761850194/Dune_Official_Trailer_zgit8u.mp4",
+    subtitlesEn: "/subtitles/Dune_Official_TrailerENG.vtt",
+    subtitlesEs: "/subtitles/Dune_Official_TrailerESP.vtt",
+  },
+  {
+    id: "fight-club",
+    title: "Fight Club",
+    year: "1999",
+    rating: "R",
+    duration: "2h 19min",
+    genre: "Drama",
+    description:
+      "An insomniac office worker and a soap maker form an underground fight club that evolves into something much, much more.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761851468/Fight_Club_1999_ezeqob.mp4",
+    subtitlesEn: "/subtitles/Fight Club (1999)ENG.vtt",
+    subtitlesEs: "/subtitles/Fight Club (1999)ESP.vtt",
+  },
+  {
+    id: "forrest-gump",
+    title: "Forrest Gump",
+    year: "1994",
+    rating: "PG-13",
+    duration: "2h 22min",
+    genre: "Drama",
+    description:
+      "The life journey of Forrest Gump, a man with a low IQ but good intentions, who unwittingly influences several historical events in 20th-century America.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852247/Forrest_Gump_f0y18l.mp4",
+    subtitlesEn: "/subtitles/Forrest_Gump_ENG.vtt",
+    subtitlesEs: "/subtitles/Forrest_Gump_ESP.vtt",
+  },
+  {
+    id: "gladiator",
+    title: "Gladiator",
+    year: "2000",
+    rating: "R",
+    duration: "2h 35min",
+    genre: "Action",
+    description:
+      "A betrayed Roman general fights his way through the arena to avenge the murder of his family and his emperor.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852279/Gladiator_trailer_mtxl89.mp4",
+    subtitlesEn: "/subtitles/Gladiator_trailer_ENG.vtt",
+    subtitlesEs: "/subtitles/Gladiator_trailer_ESP.vtt",
+  },
+  {
+    id: "inception",
+    title: "Inception",
+    year: "2010",
+    rating: "PG-13",
+    duration: "2h 28min",
+    genre: "Sci-Fi",
+    description:
+      "A skilled thief who steals secrets through dream-sharing technology is given a chance at redemption if he can successfully perform inception.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852303/Inception_2010_ygr90o.mp4",
+    subtitlesEn: "/subtitles/Inception_(2010)_ENG.vtt",
+    subtitlesEs: "/subtitles/Inception_(2010)_ESP.vtt",
+  },
+  {
+    id: "interstellar",
+    title: "Interstellar",
+    year: "2014",
+    rating: "PG-13",
+    duration: "2h 49min",
+    genre: "Sci-Fi",
+    description:
+      "A team of explorers travels through a wormhole in space to ensure humanity’s survival as Earth faces extinction.",
+    titleImage: "",
+    backgroundImage: "",
+    thumbnailImage: "",
+    alt: "",
+    videoUrl:
+      "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852329/Interstellar_q8mufv.mp4",
+    subtitlesEn: "/subtitles/Interstellar_ENG.vtt",
+    subtitlesEs: "/subtitles/Interstellar_ESP.vtt",
+  },
+
+
 ];
+
+
