@@ -3,63 +3,45 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import ReactPlayer from "react-player";
 import TopBar from "../../components/TopBar/TopBar";
 import { moviesData } from "../../screens/carrouselScreen/movieData";
-import { useAuthContext } from "../../API/authContext"; // 🔐 Import auth context
+import { useAuthContext } from "../../API/authContext";
 import { useFavorites } from "../../API/favoritesContext";
 import { apiPath } from "../../config/env";
 import "./PlayerScreen.css";
-// Reuse detail styles for comments/ratings/synopsis
 import "../movieDetail/movieDetail.css";
 
-/**
- * PlayerScreen Component
- * ----------------------
- * - Displays a movie player for the selected movie (based on URL ID).
- * - Redirects to login if the user is not authenticated.
- */
 type UserComment = { id: string; text: string; rating: number; date: string; mine?: boolean };
 
 const PlayerScreen: React.FC = () => {
-  // Get movie ID from the URL (e.g., /player/the-little-mermaid)
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
-  // Access authentication state from global AuthContext
   const { state } = useAuthContext() as any;
-  const isAuthenticated = !!state?.user; // Boolean check for logged-in user
+  const isAuthenticated = !!state?.user;
   const { toggle, has } = useFavorites();
 
-  // Find the movie by its ID from local dataset
   const movie = moviesData.find((m) => String(m.id) === String(id));
 
-  // Comments state (shared logic with Movie Detail)
   const [comment, setComment] = useState<string>("");
   const [rating, setRating] = useState<number | "">("");
   const [comments, setComments] = useState<UserComment[]>([]);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState<string>("");
-  const [editRating, setEditRating] = useState<number | "">("");
+  const [selectedSubtitle, setSelectedSubtitle] = useState<string>("none");
+  const playerRef = useRef<any>(null);
 
-  /**
-   * useEffect:
-   * - If user is not authenticated → redirect to /login
-   * - If movie not found → redirect to home (/)
-   */
+  // ✅ Validación inicial
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login", { replace: true }); // 🔄 Replaces current history entry
-    } else if (!movie) {
-      navigate("/", { replace: true }); // Avoids back loop too
-    }
+    if (!isAuthenticated) navigate("/login", { replace: true });
+    else if (!movie) navigate("/", { replace: true });
   }, [isAuthenticated, movie, navigate]);
 
-  // Load reviews for this movie
+  // ✅ Cargar reseñas
   useEffect(() => {
     let mounted = true;
     (async () => {
       if (!id) return;
       try {
-        const res = await fetch(apiPath(`/api/reviews?movieId=${encodeURIComponent(String(id))}`), { credentials: 'include' });
+        const res = await fetch(apiPath(`/api/reviews?movieId=${encodeURIComponent(String(id))}`), {
+          credentials: "include",
+        });
         const data = await res.json();
         const tokenUserId = (state as any)?.user?.id ? String((state as any).user.id) : undefined;
         const items: UserComment[] = (data.reviews || []).map((r: any) => ({
@@ -70,20 +52,21 @@ const PlayerScreen: React.FC = () => {
           mine: tokenUserId ? String(r.user) === tokenUserId : false,
         }));
         if (mounted) setComments(items);
-      } catch { /* ignore */ }
+      } catch (err) {
+        console.warn("Failed to load reviews", err);
+      }
     })();
-    return () => { mounted = false };
+    return () => {
+      mounted = false;
+    };
   }, [id, state]);
 
+  // ✅ Enviar reseña
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    if (!comment.trim() || !movie || rating === "" || rating < 1 || rating > 5) return;
+    if (!comment.trim() || !movie || rating === "" || (typeof rating === "number" && (rating < 1 || rating > 5))) return;
     try {
       const token = state?.accessToken || localStorage.getItem("accessToken");
-      if (!token) {
-        alert("Please log in to post a review.");
-        return;
-      }
       const res = await fetch(apiPath("/api/reviews"), {
         method: "POST",
         headers: {
@@ -104,7 +87,7 @@ const PlayerScreen: React.FC = () => {
       const newComment: UserComment = {
         id: created?._id || String(Date.now()),
         text: created?.text || comment.trim(),
-        rating: created?.rating || rating,
+        rating: created?.rating || (typeof rating === "number" ? rating : 0),
         date: created?.createdAt ? new Date(created.createdAt).toLocaleDateString() : new Date().toLocaleDateString(),
         mine: true,
       };
@@ -112,121 +95,128 @@ const PlayerScreen: React.FC = () => {
       setComment("");
       setRating("");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Network error";
-      alert(msg);
+      alert(err instanceof Error ? err.message : "Network error");
     }
   };
 
-  const handleDelete = async (reviewId: string) => {
-    try {
-      const token = state?.accessToken || localStorage.getItem("accessToken");
-      const res = await fetch(apiPath(`/api/reviews/${encodeURIComponent(reviewId)}`), {
-        method: "DELETE",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to delete review");
-      setComments((prev) => prev.filter((c) => c.id !== reviewId));
-    } catch { /* ignore */ }
+  // ✅ Subtítulos funcionales (sin error TS y activación correcta)
+  const injectSubtitles = async (lang: string) => {
+    const video = document.querySelector("video");
+    if (!video) return console.warn("No video element found");
+
+    // Limpia subtítulos previos
+    video.querySelectorAll("track[data-injected]").forEach((t) => t.remove());
+
+    if (lang === "none") {
+      Array.from(video.textTracks).forEach((t) => (t.mode = "disabled"));
+      return;
+    }
+
+    const src = lang === "es" ? movie?.subtitlesEs : movie?.subtitlesEn;
+    if (!src) return console.warn("No subtitle URL found for", lang);
+
+    const track = document.createElement("track");
+    track.kind = "subtitles";
+    track.label = lang === "es" ? "Español" : "English";
+    track.srclang = lang;
+    track.src = src;
+    track.default = true;
+    track.setAttribute("data-injected", "true");
+
+    track.addEventListener("load", () => {
+      const tracks = video.textTracks;
+      for (let i = 0; i < tracks.length; i++) {
+        const t = tracks[i];
+        if (t.language === lang || t.label.toLowerCase().includes(lang)) {
+          t.mode = "showing";
+        } else {
+          t.mode = "disabled";
+        }
+      }
+      console.log("✅ Subtítulos activados:", lang);
+    });
+
+    video.appendChild(track);
   };
 
-  const beginEdit = (r: UserComment) => {
-    setEditingId(r.id);
-    setEditText(r.text);
-    setEditRating(r.rating);
+  const handleSubtitleChange = (lang: string) => {
+    setSelectedSubtitle(lang);
+    injectSubtitles(lang);
   };
 
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditText("");
-    setEditRating("");
+  const onPlayerReady = () => {
+    injectSubtitles(selectedSubtitle);
   };
 
-  const saveEdit = async () => {
-    if (!editingId) return;
-    try {
-      const token = state?.accessToken || localStorage.getItem("accessToken");
-      const res = await fetch(apiPath(`/api/reviews/${encodeURIComponent(editingId)}`), {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        credentials: "include",
-        body: JSON.stringify({ text: editText.trim(), ...(editRating !== '' ? { rating: editRating } : {}) }),
-      });
-      if (!res.ok) throw new Error("Failed to update review");
-      const data = await res.json().catch(() => ({}));
-      const upd = (data as any)?.review;
-      setComments((prev) => prev.map((c) => c.id === editingId ? {
-        ...c,
-        text: upd?.text ?? editText,
-        rating: upd?.rating ?? (typeof editRating === 'number' ? editRating : c.rating),
-      } : c));
-      cancelEdit();
-    } catch { /* ignore */ }
-  };
-
-  // Prevent rendering while redirecting (avoids flickering)
   if (!isAuthenticated || !movie) return null;
 
-  // Average rating
   const count = comments.length;
   const avg = count ? comments.reduce((s, c) => s + c.rating, 0) / count : 0;
   const rounded = Math.round(avg);
   const stars = "★".repeat(rounded) + "☆".repeat(5 - rounded);
 
-  // Title image for the details section
   const IMG_BASE = "/movie/movie-website-landing-page-images/movies/";
   const titleUrl = movie?.titleImage
-    ? (movie.titleImage.startsWith("http")
-        ? movie.titleImage
-        : movie.titleImage.startsWith("/")
-          ? movie.titleImage
-          : IMG_BASE + movie.titleImage)
+    ? movie.titleImage.startsWith("http")
+      ? movie.titleImage
+      : movie.titleImage.startsWith("/")
+      ? movie.titleImage
+      : IMG_BASE + movie.titleImage
     : undefined;
 
   return (
     <div className="player-container">
-      {/*Top navigation bar */}
       <TopBar />
 
-      {/*Movie player section */}
       <div className="player-wrapper full-cover">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
+        <button className="back-button" onClick={() => navigate(-1)}>← Back</button>
 
-        {/* Embedded YouTube video (local movieData) */}
         <ReactPlayer
+          ref={playerRef}
           className="react-player"
           src={movie.videoUrl}
           config={{
-            youtube: {
-              playerVars: {
-                origin: window.location.origin,
-                rel: 0,
-                modestbranding: 1,
-                playsinline: 1,
-              },
-              embedOptions: {
-                host: 'https://www.youtube.com',
-              },
-            },
+            file: { attributes: { crossOrigin: "anonymous", preload: "metadata", playsInline: true } },
           }}
           controls
           width="100%"
           height="100%"
+          onReady={onPlayerReady}
         />
+
+        {/* ✅ Botones de subtítulos visibles */}
+        <div className="subtitle-buttons">
+          {movie?.subtitlesEs && (
+            <button
+              className={selectedSubtitle === "es" ? "active" : ""}
+              onClick={() => handleSubtitleChange("es")}
+            >
+              Español
+            </button>
+          )}
+          {movie?.subtitlesEn && (
+            <button
+              className={selectedSubtitle === "en" ? "active" : ""}
+              onClick={() => handleSubtitleChange("en")}
+            >
+              Inglés
+            </button>
+          )}
+          <button
+            className={selectedSubtitle === "none" ? "active" : ""}
+            onClick={() => handleSubtitleChange("none")}
+          >
+            Sin Subtítulos
+          </button>
+        </div>
       </div>
 
-      {/* Details + comments below the player */}
+      {/* ===== Detalles + comentarios ===== */}
       <section className="player-detail-section" style={{ padding: "24px 16px", background: "#000" }}>
         <div className="movie-overlay" style={{ maxWidth: 980, margin: "0 auto" }}>
-          {titleUrl && (
-            <img src={titleUrl} alt={movie.alt ?? movie.title} className="movie-title-img" />
-          )}
+          {titleUrl && <img src={titleUrl} alt={movie.alt ?? movie.title} className="movie-title-img" />}
           <h1 style={{ textAlign: "center", color: "#f1c40f", marginTop: 0 }}>{movie.title}</h1>
+
           <div className="movie-info">
             <p><strong>Year:</strong> {movie.year ?? "—"}</p>
             <p><strong>Duration:</strong> {movie.duration ?? "—"}</p>
@@ -249,11 +239,12 @@ const PlayerScreen: React.FC = () => {
             <Link className="btn btn-dark" to="/favorites">Go to Favorites</Link>
           </div>
 
+          {/* Comentarios */}
           <div className="comments-section">
             <h2>Reviews and Comments</h2>
             <form onSubmit={handleSubmit} className="comment-form">
               <div className="rating-stars">
-                {[1,2,3,4,5].map((n) => (
+                {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
                     type="button"
@@ -273,7 +264,9 @@ const PlayerScreen: React.FC = () => {
                 rows={4}
                 required
               />
-              <button type="submit" disabled={rating === "" || !comment.trim()}>Submit</button>
+              <button type="submit" disabled={rating === "" || !comment.trim()}>
+                Submit
+              </button>
             </form>
 
             <div className="comments-list">
@@ -282,39 +275,9 @@ const PlayerScreen: React.FC = () => {
               ) : (
                 comments.map((c) => (
                   <div key={c.id} className="comment">
-                    {editingId === c.id ? (
-                      <>
-                        <div className="rating-stars" aria-label="Edit rating">
-                          {[1,2,3,4,5].map((n) => (
-                            <button
-                              key={n}
-                              type="button"
-                              className={`rating-star ${((editRating || 0) as number) >= n ? "active" : ""}`}
-                              onClick={() => setEditRating(n)}
-                            >
-                              ★
-                            </button>
-                          ))}
-                        </div>
-                        <textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} />
-                        <div className="inline-actions">
-                          <button className="btn" onClick={saveEdit} disabled={!editText.trim() || editRating === ""}>Save</button>
-                          <button className="btn btn-dark" onClick={cancelEdit}>Cancel</button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <p className="stars">{"★".repeat(c.rating)}{"☆".repeat(5 - c.rating)}</p>
-                        <p>{c.text}</p>
-                        <small>{c.date}</small>
-                        {c.mine && (
-                          <div className="inline-actions">
-                            <button className="btn" onClick={() => beginEdit(c)}>Edit</button>
-                            <button className="btn btn-dark" onClick={() => handleDelete(c.id)}>Delete</button>
-                          </div>
-                        )}
-                      </>
-                    )}
+                    <p className="stars">{"★".repeat(c.rating)}{"☆".repeat(5 - c.rating)}</p>
+                    <p>{c.text}</p>
+                    <small>{c.date}</small>
                   </div>
                 ))
               )}

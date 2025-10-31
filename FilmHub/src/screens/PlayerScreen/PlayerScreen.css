@@ -51,9 +51,9 @@ body {
 /* Botón “Volver” arriba */
 .player-container .back-button {
     position: absolute;
-        /* push below the fixed TopBar (~60px) to avoid overlapping the logo */
-        top: calc(76px + env(safe-area-inset-top));
-        left: calc(16px + env(safe-area-inset-left));
+    /* push below the fixed TopBar (~60px) to avoid overlapping the logo */
+    top: calc(76px + env(safe-area-inset-top));
+    left: calc(16px + env(safe-area-inset-left));
     background-color: orange;
     color: white;
     border: none;
@@ -72,7 +72,44 @@ body {
     transform: scale(1.05);
 }
 
-/* Mobile tweaks to reduce aggressive crop */
+/* ===== BOTONES DE SUBTÍTULOS ===== */
+.subtitle-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 2000; /* sobre el video */
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 12px;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
+}
+
+.subtitle-buttons button {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.subtitle-buttons button:hover {
+    background-color: #f1c40f;
+    color: #000;
+}
+
+.subtitle-buttons button.active {
+    background-color: #f1c40f;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(241, 196, 15, 0.6);
+}
+
+/* Mobile tweaks */
 @media (max-width: 600px) {
     .react-player iframe {
         transform: scale(1.02);
@@ -83,5 +120,15 @@ body {
     .player-container .back-button {
         top: calc(68px + env(safe-area-inset-top));
         left: calc(12px + env(safe-area-inset-left));
+    }
+    .subtitle-buttons {
+        bottom: 12px;
+        right: 12px;
+        gap: 8px;
+        padding: 6px 10px;
+    }
+    .subtitle-buttons button {
+        font-size: 12px;
+        padding: 6px 10px;
     }
 }
