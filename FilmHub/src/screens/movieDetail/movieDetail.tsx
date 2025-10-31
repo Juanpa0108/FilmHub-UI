@@ -19,6 +19,7 @@ import Searchbar from "../../components/SearchBar/Searchbar";
 import BrandLogo from "../../components/BrandLogo/BrandLogo";
 import { FaUserCircle } from "react-icons/fa";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
+import OverlayPortal from "../../components/OverlayPortal/OverlayPortal";
 
 type UserComment = {
   id: string;
@@ -40,6 +41,10 @@ const MovieDetail: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
+  const menuBtnRef = useRef<HTMLButtonElement | null>(null);
+  const userBtnRef = useRef<HTMLButtonElement | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
+  const [userPos, setUserPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
 
   // Review composer state
   const [comment, setComment] = useState<string>("");
@@ -52,14 +57,18 @@ const MovieDetail: React.FC = () => {
   useEffect(() => {
     let mounted = true;
     function handleClickOutside(e: MouseEvent) {
-      if (!userMenuOpen) return;
-      const target = e.target as Node | null;
-      if (userMenuRef.current && target && !userMenuRef.current.contains(target)) {
-        setUserMenuOpen(false);
+      const el = e.target as Element | null;
+      if (el && el.closest && el.closest('.nav-overlay')) return;
+      if (userMenuOpen) {
+        const target = e.target as Node | null;
+        if (userMenuRef.current && target && !userMenuRef.current.contains(target)) {
+          setUserMenuOpen(false);
+        }
       }
+      if (menuAbierto) setMenuAbierto(false);
     }
     function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") setUserMenuOpen(false);
+      if (e.key === "Escape") { setUserMenuOpen(false); setMenuAbierto(false); }
     }
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEsc);
@@ -88,12 +97,80 @@ const MovieDetail: React.FC = () => {
         if (mounted) setComments(items);
       } catch { /* ignore */ }
     })();
+    // Position overlays when opened and on resize
+    const calcRight = (rect: DOMRect) => Math.max(8, window.innerWidth - rect.right);
+    function placeBelowOrAbove(rect: DOMRect): { top?: number; bottom?: number; right: number } {
+      const right = Math.round(calcRight(rect));
+      const spaceBelow = window.innerHeight - rect.bottom - 8;
+      const estimatedMenuH = 220; const NAVBAR_H = 70; const MIN_TOP = NAVBAR_H + 6;
+      if (spaceBelow < estimatedMenuH) {
+        return { bottom: Math.round(window.innerHeight - rect.top + 8), right };
+      }
+      const belowTop = Math.round(rect.bottom + 8);
+      return { top: Math.max(belowTop, MIN_TOP), right };
+    }
+    if (menuAbierto && menuBtnRef.current) {
+      const r = menuBtnRef.current.getBoundingClientRect();
+      setMenuPos(placeBelowOrAbove(r));
+    } else { setMenuPos(null); }
+    if (userMenuOpen && userBtnRef.current) {
+      const r = userBtnRef.current.getBoundingClientRect();
+      setUserPos(placeBelowOrAbove(r));
+    } else { setUserPos(null); }
+    function updatePositions(){
+      if (menuAbierto && menuBtnRef.current){
+        const r = menuBtnRef.current.getBoundingClientRect();
+        setMenuPos(placeBelowOrAbove(r));
+      }
+      if (userMenuOpen && userBtnRef.current){
+        const r = userBtnRef.current.getBoundingClientRect();
+        setUserPos(placeBelowOrAbove(r));
+      }
+    }
+    const onResize = () => updatePositions();
+    const onScroll = () => updatePositions();
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       mounted = false;
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEsc);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
     };
-  }, [id, userMenuOpen]);
+  }, [id, userMenuOpen, menuAbierto]);
+
+  // rAF anchoring loop to keep overlays pegged to triggers while scrolling
+  useEffect(() => {
+    function update(){
+      if (menuAbierto && menuBtnRef.current){
+        const r = menuBtnRef.current.getBoundingClientRect();
+        const right = Math.max(8, window.innerWidth - r.right);
+        const spaceBelow = window.innerHeight - r.bottom - 8;
+        const estimatedMenuH = 220; const NAVBAR_H = 70; const MIN_TOP = NAVBAR_H + 6;
+        const next = spaceBelow < estimatedMenuH
+          ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+          : { top: Math.max(Math.round(r.bottom + 8), MIN_TOP), right: Math.round(right) };
+        setMenuPos(next);
+      }
+      if (userMenuOpen && userBtnRef.current){
+        const r = userBtnRef.current.getBoundingClientRect();
+        const right = Math.max(8, window.innerWidth - r.right);
+        const spaceBelow = window.innerHeight - r.bottom - 8;
+        const estimatedMenuH = 220; const NAVBAR_H = 70; const MIN_TOP = NAVBAR_H + 6;
+        const next = spaceBelow < estimatedMenuH
+          ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+          : { top: Math.max(Math.round(r.bottom + 8), MIN_TOP), right: Math.round(right) };
+        setUserPos(next);
+      }
+    }
+    let raf: number | null = null;
+    if (menuAbierto || userMenuOpen) {
+      const loop = () => { update(); raf = requestAnimationFrame(loop); };
+      raf = requestAnimationFrame(loop);
+    }
+    return () => { if (raf) cancelAnimationFrame(raf); };
+  }, [menuAbierto, userMenuOpen]);
 
   if (!movie) {
     return <h2 className="not-found">🎬 Movie not found</h2>;
@@ -183,13 +260,32 @@ const MovieDetail: React.FC = () => {
         <div className="header">
           <Searchbar />
           <div className="menu-container">
-            <button className="menu-button" onClick={() => setMenuAbierto(!menuAbierto)}>☰</button>
+            <button className="menu-button" ref={menuBtnRef} onClick={() => {
+              if (!menuAbierto && menuBtnRef.current){
+                const r = menuBtnRef.current.getBoundingClientRect();
+                const right = Math.max(8, window.innerWidth - r.right);
+                const spaceBelow = window.innerHeight - r.bottom - 8; const estimatedMenuH = 220;
+                const pos = spaceBelow < estimatedMenuH
+                  ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+                  : { top: Math.round(r.bottom + 8), right: Math.round(right) };
+                setMenuPos(pos); setMenuAbierto(true);
+              } else { setMenuAbierto(false); }
+            }}>☰</button>
             {menuAbierto && (
-              <div className="dropdown-menu">
-                <Link to="/categories">Categories</Link>
-                <Link to="/my-reviews">My Reviews</Link>
-                <Link to="/favorites">Favorites</Link>
-              </div>
+              <OverlayPortal className="user-dropdown nav-overlay" style={menuPos ?? undefined}>
+                {user ? (
+                  <>
+                    <Link to="/categories" onClick={() => setMenuAbierto(false)}>Categories</Link>
+                    <Link to="/my-reviews" onClick={() => setMenuAbierto(false)}>My Reviews</Link>
+                    <Link to="/favorites" onClick={() => setMenuAbierto(false)}>Favorites</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" onClick={() => setMenuAbierto(false)}>Login</Link>
+                    <Link to="/register" onClick={() => setMenuAbierto(false)}>Register</Link>
+                  </>
+                )}
+              </OverlayPortal>
             )}
           </div>
           <div className="auth-buttons">
@@ -200,15 +296,29 @@ const MovieDetail: React.FC = () => {
               </>
             ) : (
               <div className="user-menu" ref={userMenuRef}>
-                <button className="user-avatar" onClick={() => setUserMenuOpen((v) => !v)}>
+                <button className="user-avatar" ref={userBtnRef} onClick={() => {
+                  setUserMenuOpen((v) => {
+                    const next = !v;
+                    if (next && userBtnRef.current){
+                      const r = userBtnRef.current.getBoundingClientRect();
+                      const right = Math.max(8, window.innerWidth - r.right);
+                      const spaceBelow = window.innerHeight - r.bottom - 8; const estimatedMenuH = 220;
+                      const pos = spaceBelow < estimatedMenuH
+                        ? { bottom: Math.round(window.innerHeight - r.top + 8), right: Math.round(right) }
+                        : { top: Math.round(r.bottom + 8), right: Math.round(right) };
+                      setUserPos(pos);
+                    }
+                    return next;
+                  })
+                }}>
                   <FaUserCircle />
                 </button>
                 {userMenuOpen && (
-                  <div className="user-dropdown">
+                  <OverlayPortal className="user-dropdown nav-overlay" style={userPos ?? undefined}>
                     <div className="user-header">{user?.firstName || user?.username || user?.email}</div>
-                    <Link className="user-item" to="/profile">Profile</Link>
+                    <Link className="user-item" to="/profile" onClick={() => setUserMenuOpen(false)}>Profile</Link>
                     <div className="user-item"><LogoutButton /></div>
-                  </div>
+                  </OverlayPortal>
                 )}
               </div>
             )}

@@ -12,6 +12,7 @@ import Favorites from "./screens/favoritesScreen/Favorites";
 import MovieDetail from "./screens/movieDetail/movieDetail";
 import CarrouselScreen from "./screens/carrouselScreen/carrouselScreen";
 import CategoriesScreen from "./screens/categoriesScreen/categoriesScreen";
+import CategoryResults from "./screens/categoryResults/CategoryResults";
 import MyReviewsScreen from "./screens/myReviewsScreen/myReviewsScreen";
 import Profile from "./screens/profileScreen/profileScreen";
 import PlayerScreen from "./screens/PlayerScreen/player";
@@ -20,6 +21,7 @@ import About from "./screens/static/About";
 import Contact from "./screens/static/Contact";
 import Terms from "./screens/static/Terms";
 import Privacy from "./screens/static/Privacy";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 // Footer component extracted to access auth context cleanly
 function AppFooter() {
@@ -71,16 +73,22 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         
         <Routes>
           <Route path="/" element={<Principal />} />
-          <Route path="/favorites" element={<Favorites />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/recovery" element={<Recovery />} />
           <Route path="/carrousel_principal" element={<CarrouselScreen />} />
           <Route path="/categories" element={<CategoriesScreen />} />
-          <Route path="/my-reviews" element={<MyReviewsScreen />} />
+          <Route path="/categories/:genre" element={<CategoryResults />} />
           <Route path="/player/:id" element={<PlayerScreen />} />
           <Route path="/movie/:id" element={<MovieDetail />} /> 
-          <Route path="/profile" element={<Profile />} /> 
+
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/my-reviews" element={<MyReviewsScreen />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+
           <Route path="/help" element={<Help />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

@@ -153,7 +153,7 @@ button {
 }
 
 /* Page-specific alignment for Back under navbar */
-.favorites-wrapper .back-button.page-back { top: 80px; margin-left: 40px; }
+.favorites-wrapper .back-button.page-back { top: 80px; margin-left: 16px; }
 .categories-page .back-button.page-back { top: 80px; margin-left: 40px; }
 
 /* Responsive */
