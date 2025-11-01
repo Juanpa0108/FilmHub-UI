@@ -99,10 +99,10 @@ export const moviesData = [
     genre: "Adventure",
     description:
       "Marty McFly, a teenager accidentally sent thirty years into the past, must make sure his high school–aged parents fall in love in order to return to the future.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
-    alt: "",
+    titleImage: "/movie/movie-website-landing-page-images/back-to-f-title.png",
+    backgroundImage: "back-to-future-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/back-to-f-portada.jpg",
+    alt: "back-to-future",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761850168/Back_To_The_Future_1985_e9iukm.mp4",
     subtitlesEn: "/subtitles/Back_To_The Future (1985)ENG.vtt",
@@ -117,9 +117,9 @@ export const moviesData = [
     genre: "Sci-Fi",
     description:
       "Paul Atreides, a brilliant and gifted young man, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "https://upload.wikimedia.org/wikipedia/commons/4/44/Dune_2021_transparent_logo.png",
+    backgroundImage: "dune-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/dune-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761850194/Dune_Official_Trailer_zgit8u.mp4",
@@ -135,9 +135,9 @@ export const moviesData = [
     genre: "Drama",
     description:
       "An insomniac office worker and a soap maker form an underground fight club that evolves into something much, much more.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "/movie/movie-website-landing-page-images/fight-title.png",
+    backgroundImage: "fight-club-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/fight-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761851468/Fight_Club_1999_ezeqob.mp4",
@@ -153,9 +153,9 @@ export const moviesData = [
     genre: "Drama",
     description:
       "The life journey of Forrest Gump, a man with a low IQ but good intentions, who unwittingly influences several historical events in 20th-century America.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "/movie/movie-website-landing-page-images/gump-title.png",
+    backgroundImage: "forrest-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/gump-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852247/Forrest_Gump_f0y18l.mp4",
@@ -171,9 +171,9 @@ export const moviesData = [
     genre: "Action",
     description:
       "A betrayed Roman general fights his way through the arena to avenge the murder of his family and his emperor.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Gladiator_logo.svg",
+    backgroundImage: "gladiatior-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/gladiator-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852279/Gladiator_trailer_mtxl89.mp4",
@@ -189,9 +189,9 @@ export const moviesData = [
     genre: "Sci-Fi",
     description:
       "A skilled thief who steals secrets through dream-sharing technology is given a chance at redemption if he can successfully perform inception.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Inception-wordmark.svg",
+    backgroundImage: "inception-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/inception-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852303/Inception_2010_ygr90o.mp4",
@@ -207,9 +207,9 @@ export const moviesData = [
     genre: "Sci-Fi",
     description:
       "A team of explorers travels through a wormhole in space to ensure humanity’s survival as Earth faces extinction.",
-    titleImage: "",
-    backgroundImage: "",
-    thumbnailImage: "",
+    titleImage: "/movie/movie-website-landing-page-images/intelestelar-title.png",
+    backgroundImage: "interesterar-back.jpg",
+    thumbnailImage: "/movie/movie-website-landing-page-images/movies/Interstellar-porta.jpg",
     alt: "",
     videoUrl:
       "https://res.cloudinary.com/dpcserk7d/video/upload/v1761852329/Interstellar_q8mufv.mp4",
